@@ -66,7 +66,7 @@ for gff_line in args.G:
 				gen_dict[chr_id][:-1][gene_start + 1:gene_start + 2001]
 				if args.r == 'T':
 					gene_seq = reverse_complement(gene_seq)
-					gene_strand += ' reverse'
+					gene_strand += ' reverse_complement'
 
 			gene_id = gff_split[-1].split(';')[0][3:]
 			args.o.write('>' + gene +' | ' + gene_strand + '\n' + gene_seq + '\n')
