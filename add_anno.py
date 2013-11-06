@@ -30,7 +30,9 @@ for x in anno:
 	id = xl[args.n -1].replace('P','G')[:-2]
 	anno_dict[id] = x
 
-for x in non_an[1:]:
+for x in non_an:
+	if 'Csa' not in x:
+		continue
 	id = x.split('\t')[args.m-1]
 	if id in anno_dict:
 		add = anno_dict[id]
@@ -38,7 +40,7 @@ for x in non_an[1:]:
 		add = 'None'
 	
 	idx = non_an.index(x) 
-	non_an[idx] = x[:-1] + '\t' + add + '\n'
+	non_an[idx] = x[:-1] + '\t' + add 
 
 args.o.write(header)
 args.o.writelines(non_an[1:])
