@@ -27,15 +27,15 @@ anno_dict = {}
 
 for x in anno:
 	xl = x.split('\t')
-	id = xl[args.n -1].replace('P','G')[:-2]
-	anno_dict[id] = x
+	gene_id = xl[args.n -1].replace('P','G')[:-2]
+	anno_dict[gene_id] = x
 
 for x in non_an:
 	if 'Csa' not in x:
 		continue
-	id = x.split('\t')[args.m-1]
-	if id in anno_dict:
-		add = anno_dict[id]
+	gene_id = x.split('\t')[args.m-1]
+	if gene_id in anno_dict:
+		add = anno_dict[gene_id]
 	else:
 		add = 'None'
 	
