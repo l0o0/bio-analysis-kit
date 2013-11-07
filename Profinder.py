@@ -43,7 +43,11 @@ gen_dict = fa_to_dict(args.f)
 
 #select gene id by col number
 gene_list = args.i.readlines()
-gene_list = [x.split()[args.c -1] for x in gene_list]		
+
+for x in gene_list:
+	x = x.split()[args.c -1]
+	if 'M' not in x:
+		x = x.replace(x[4],'M')
 print gene_list
 
 # find 2000 bp before the ATG
@@ -69,6 +73,7 @@ for gff_line in args.G:
 					gene_strand += ' reverse_complement'
 
 			gene_id = gff_split[-1].split(';')[0][3:]
+			print gene, 'found'
 			args.o.write('>' + gene +' | ' + gene_strand + '\n' + gene_seq + '\n')
 
 args.o.close()
