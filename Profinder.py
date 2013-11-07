@@ -42,12 +42,21 @@ def fa_to_dict(fa_file):
 gen_dict = fa_to_dict(args.f)
 
 #select gene id by col number
-gene_list = args.i.readlines()
+gene_list = []
 
-for x in gene_list:
+for x in args.i:
+	if 'Csa' not in x or x == '\n':
+		continue
 	x = x.split()[args.c -1]
 	if 'M' not in x:
-		x = x.replace(x[4],'M')
+		x = x.replace('G','M')
+		if ',' in x:
+			x = x.split(',')
+			gene_list += x
+		else:
+			gene_list.append(x)
+	else:	
+		gene_list.append(x)
 print gene_list
 
 # find 2000 bp before the ATG
