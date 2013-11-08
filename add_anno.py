@@ -1,7 +1,7 @@
 #! /bin/env python
 #Date: 2013-10-31
-#Author: Linxzh
-# add the annotation
+#Author: Linxzh version = 0.1.1
+#add the annotation
 
 import argparse
 
@@ -19,10 +19,11 @@ result = []
 
 #create a header
 if 'Csa' in anno[0]:
-	header = non_an[0][:-1] + 'Annotation\n'
+	header = '%s\t%s\n' % (non_an[0][:-1],'Annotation')
 else:	
-	header = non_an[0][:-1] + '\t' + anno[0]
+	header = '%s\t%s\n' % (non_an[0][:-1],anno[0])
 
+#creat a annotation dict
 anno_dict = {}
 
 for x in anno:
@@ -30,17 +31,23 @@ for x in anno:
 	gene_id = xl[args.n -1].replace('P','G')[:-2]
 	anno_dict[gene_id] = x
 
+#gene_id corresponding to the annotation
+
 for x in non_an:
-	if 'Csa' not in x:
+	add = ''
+	if 'Csa' not in x:					#exclude the non-gene row
 		continue
-	gene_id = x.split('\t')[args.m-1]
-	if gene_id in anno_dict:
-		add = anno_dict[gene_id]
-	else:
-		add = 'None'
-	
+
+	gene_ids = x.split('\t')[args.m-1].split(',')
+
+	for gene in gene_ids:				#if ',' in gene row
+		if gene in anno_dict:
+			add = add + ' |' + anno_dict[gene][:-1]			
+		else:
+			add = add + ' |' + 'None'
+	add += '\n'		
 	idx = non_an.index(x) 
-	non_an[idx] = x[:-1] + '\t' + add 
+	non_an[idx] = x.replace('\n','\t') + add 
 
 args.o.write(header)
 args.o.writelines(non_an[1:])
