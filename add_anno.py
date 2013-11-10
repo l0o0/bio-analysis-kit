@@ -18,11 +18,9 @@ anno = args.a.readlines()
 result = []
 
 #create a header
-if 'Csa' in anno[0]:
+if 'Csa' not in anno[0]:
 	header = '%s\t%s\n' % (non_an[0][:-1],'Annotation')
-else:	
-	header = '%s\t%s\n' % (non_an[0][:-1],anno[0])
-
+	args.o.write(header)
 #creat a annotation dict
 anno_dict = {}
 
@@ -49,7 +47,6 @@ for x in non_an:
 	idx = non_an.index(x) 
 	non_an[idx] = x.replace('\n','\t') + add 
 
-args.o.write(header)
 args.o.writelines(non_an[1:])
 args.o.close()
 args.i.close()
