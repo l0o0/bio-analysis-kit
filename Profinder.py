@@ -24,7 +24,7 @@ parser.add_argument('-c', type=int, default=1,
 parser.add_argument('-o', help='output file name(fasta format by default',
 		type=argparse.FileType('w'),default='output.fa') 
 parser.add_argument('-r', help='''reverse_complement of the sequence if
-		the strand is '-',default is false, valid parameter is T or F''',
+		the strand is '-',default is true, valid parameter is T or F''',
 		default='T', choices=['T','F'])
 args=parser.parse_args()
 
@@ -72,7 +72,7 @@ def pos(gff3):							#input gff3 file
 			start = int(xlist[3])
 			end = int(xlist[4])
 			strand = xlist[6]
-			gene_id = xlist[9][-13:]
+			gene_id = xlist[9][-13:-2]
 			chr_id = xlist[0]
 			
 			D[gene_id] = [start,end,strand,chr_id]
