@@ -10,6 +10,7 @@ from Bio.Seq import reverse_complement
 #specify the arguments
 parser = argparse.ArgumentParser(description='Find the promoter sequence',
 		prog='Promoter Finder', usage='PROG [options]')
+parser.add_argument('-l',help='sequence length, default is 2kb', type=int, default=2000)
 parser.add_argument('-i',help='input a gene id list', 
 		type=argparse.FileType('r'))
 parser.add_argument('-G', type=argparse.FileType('r'),
@@ -79,7 +80,7 @@ def pos(gff3):							#input gff3 file
 	return D
 
 # find 2000 bp before the ATG
-def promoter(chr_dict, pos_dict, reverse, output, gene_list):	
+def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):	
 	
 	for gene in gene_list:
 		start = pos_dict[gene][0]
@@ -89,10 +90,10 @@ def promoter(chr_dict, pos_dict, reverse, output, gene_list):
 
 		if gene_strand == '+':
 			gene_start = start
-			gene_seq = chr[:-1][gene_start-2000:gene_start]
+			gene_seq = chr[:-1][gene_start-length:gene_start]
 		elif gene_strand == '-':
 			gene_start = end
-			gene_seq = chr[:-1][gene_start + 1:gene_start + 2001]
+			gene_seq = chr[:-1][gene_start + 1:gene_start + length + 1]
 			if reverse == 'T':
 				gene_seq = reverse_complement(gene_seq)
 				gene_strand += ' reverse_complement'
@@ -106,7 +107,7 @@ if __name__ == '__main__':
 	chr_dict = fa_to_dict(args.f)
 	pos_dict = pos(args.G)
 	gene_list = select_gene(args.i, args.c)
-	promoter(chr_dict, pos_dict, args.r, args.o, gene_list)
+	promoter(chr_dict, pos_dict, args.r, args.o, gene_list, args.l)
 
 	t = time.clock() - start		#time comsumed
 	print 'Time: ' ,t				#print time consumed
