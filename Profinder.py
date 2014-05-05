@@ -35,8 +35,7 @@ start = time.clock()		#start a clock
 def fa_to_dict(fa_file):
 	fa_lists = fa_file.readlines()
 	fa_dict = {}
-
-	for i in range(0,13,2):
+	for i in range(0,len(fa_lists),2):
 		key = fa_lists[i].split('\t')[0][1:]
 		fa_dict[key] = fa_lists[i+1]
 	print 'Chromesome read complete!'	
