@@ -8,15 +8,16 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help = 'input a non annotation file',\
 		type= argparse.FileType('r'))
-parser.add_argument("-a", help = "input an annotation file", \
-		type = argparse.FileType('r'),\
+parser.add_argument("-a", help = "input an annotation file, default value is 1234.txt", type = argparse.FileType('r'),\
 		default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
 parser.add_argument('-o', help = 'the output file', \
 		type = argparse.FileType('w'))
 parser.add_argument('-m',default = 1,\
-		help='gene id col number of non annotation file',type=int)
+		help='gene id col number of non annotation file, default is 1',\
+		type=int)
 parser.add_argument('-n',default = 1,\
-		help='gene id col number of annotation file', type=int)
+		help='gene id col number of annotation file, default is 1',\
+		type=int)
 args=parser.parse_args()
 
 
