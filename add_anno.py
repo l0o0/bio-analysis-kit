@@ -18,6 +18,7 @@ parser.add_argument('-m',default = 1,\
 parser.add_argument('-n',default = 1,\
 		help='gene id col number of annotation file, default is 1',\
 		type=int)
+parser.add_argument('-s', default = '| ', type = str)
 args=parser.parse_args()
 
 
@@ -74,9 +75,9 @@ def add_anno(infile, outfile, anno):
 				gene = gene.replace(a,'M')	# replace 'P' or 'G' to 'M'
 
 			if gene in anno_dict:			# add anno if gene in an-dict
-				add = add + ' |' + anno_dict[gene][:-1]
+				add = add + args.s + anno_dict[gene][:-1]
 			else:
-				add = add + ' |' + 'None'
+				add = add + args.s + 'None'
 
 		add += '\n'
 		idx = non_an.index(x)
