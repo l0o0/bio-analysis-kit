@@ -57,6 +57,7 @@ def add_anno(infile, outfile, anno):
 			point = 'yes'
 		else:
 			point = 'no'
+		infile.seek(0)
 
 	anno_dict = an_2_dic(anno,point)		# anno file to dict
 
