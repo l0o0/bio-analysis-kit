@@ -18,7 +18,7 @@ parser.add_argument('-G', type=argparse.FileType('r'),
 		default='/share/fg3/Linxzh/Data/Cucumber_ref/Cucumber_20101104.gff3')
 parser.add_argument('-f', help="genome sequence file,default is /share/fg3/\
 		Linxzh/Data/Cucumber_ref/domestic_Chr_20101102.fa",
-		default='/share/fg3/Linxzh/Data/Cucumber_ref/domestic_Chr_20101102.fa',\
+		default='/share/fg3/Linxzh/Data/Cucumber_ref/whole_genome/domestic_Chr_20101102.fa',\
 		type=argparse.FileType('r'))
 parser.add_argument('-c', type=int, default=1, 
 		help='specify the col number of input gene list,default is 1')
@@ -67,12 +67,12 @@ def pos(gff3):							#input gff3 file
 	gene_id = 'test'
 
 	for x in gff3:
-		if 'Chr' in x and 'CDS' in x and gene_id not in x:
+		if 'CDS' in x and gene_id not in x:
 			xlist = x.split()
 			start = int(xlist[3])
 			end = int(xlist[4])
 			strand = xlist[6]
-			gene_id = xlist[9][-13:-2]
+			gene_id = xlist[9].split('=')[1][:-2]
 			chr_id = xlist[0]
 			
 			D[gene_id] = [start,end,strand,chr_id]
