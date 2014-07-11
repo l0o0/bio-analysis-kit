@@ -18,7 +18,7 @@ parser.add_argument('-G', type=argparse.FileType('r'),
 		default='/share/fg3/Linxzh/Data/Cucumber_ref/Cucumber_20101104.gff3')
 parser.add_argument('-f', help="genome sequence file,default is /share/fg3/\
 		Linxzh/Data/Cucumber_ref/domestic_Chr_20101102.fa",
-		default='/share/fg3/Linxzh/Data/Cucumber_ref/whole_genome/domestic_Chr_20101102.fa',\
+		default='/share/fg3/Linxzh/Data/Cucumber_ref/whole_genome/origin/domestic_Chr_20101102.fa',\
 		type=argparse.FileType('r'))
 parser.add_argument('-c', type=int, default=1, 
 		help='specify the col number of input gene list,default is 1')
@@ -36,7 +36,7 @@ def fa_to_dict(fa_file):
 	fa_lists = fa_file.readlines()
 	fa_dict = {}
 	for i in range(0,len(fa_lists),2):
-		key = fa_lists[i].split('\t')[0][1:]
+		key = fa_lists[i].split()[0][1:]
 		fa_dict[key] = fa_lists[i+1]
 	print 'Chromesome read complete!'	
 	return fa_dict
