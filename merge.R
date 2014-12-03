@@ -17,5 +17,5 @@ for (i in 2:28){
 	atable <- merge(atable, btable, by = 'gene_id', all =TRUE)
 }
 
-write.table(atable, sep='\t', file='Genes_Fpkm_Merged.txt', quote=FALSE, row.names=FALSE, na='0.00')
+write.table(atable, sep='\t', file='Genes_Fpkm_Merged.txt', quote=FALSE, row.names=FALSE, na='NA')
 

@@ -17,7 +17,7 @@ parser.add_argument('-G', type=argparse.FileType('r'),
 		help='a GFF3 annotation file, default is Lin/Data/Cucumber_ref/gff3',
 		default='/share/fg3/Linxzh/Data/Cucumber_ref/Cucumber_20101104.gff3')
 parser.add_argument('-f', help="genome sequence file,default is /share/fg3/\
-		Linxzh/Data/Cucumber_ref/domestic_Chr_20101102.fa",
+		Linxzh/Data/Cucumber_ref/origin/domestic_Chr_20101102.fa",
 		default='/share/fg3/Linxzh/Data/Cucumber_ref/whole_genome/origin/domestic_Chr_20101102.fa',\
 		type=argparse.FileType('r'))
 parser.add_argument('-c', type=int, default=1, 
@@ -58,7 +58,7 @@ def select_gene(inputfile,gene_col):			#file input and gene col nm
 				gene_list.append(x)
 		else:	
 			gene_list.append(x)
-	print 'This is the gene list: \n',gene_list
+	print '%s genes input.' % (len(gene_list))
 	return gene_list		
 
 #creat a dict,gene id as key, position as value
@@ -80,7 +80,7 @@ def pos(gff3):							#input gff3 file
 
 # find 2000 bp before the ATG
 def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):	
-	
+	n = 0	
 	for gene in gene_list:
 		start = pos_dict[gene][0]
 		end = pos_dict[gene][1]
@@ -97,8 +97,9 @@ def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):
 				gene_seq = reverse_complement(gene_seq)
 				gene_strand += ' reverse_complement'
 
-		print gene, 'found'
+		n+=1
 		output.write('>' + gene +' | ' + gene_strand + '\n' + gene_seq + '\n')
+	print "%s genes found!" % n
 
 	output.close()
 

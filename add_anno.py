@@ -1,9 +1,10 @@
 #! /bin/env python
-#Date: 2013-10-31, last edit: 2013-12-20
-#Author: Linxzh version = 0.1.2
+#Date: 2013-10-31, last edit: 2014-11-21
+#Author: Linxzh version = 0.1.3
 #add the annotation
 
 import argparse
+import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help = 'input a non annotation file',\
@@ -18,76 +19,71 @@ parser.add_argument('-m',default = 1,\
 parser.add_argument('-n',default = 1,\
 		help='gene id col number of annotation file, default is 1',\
 		type=int)
-parser.add_argument('-s', default = '| ', type = str)
+parser.add_argument('-s', default = '| ', type = str, help='seperate symbol')
 args=parser.parse_args()
 
 
 # creat a annotation dict
-def an_2_dic(anno, point='yes'):
+def an_2_dic(anno):
 	'''convert the annotation list into a dict, gene id as key, anno as value'''
 
 	anno_dict = {}
 
 	for x in anno:
+
+		if '#' in x:
+			anno_dict['header'] = x
+
 		xl = x.split('\t')
-		if point == 'yes':
-			gene_id = xl[args.n -1].replace('P','M')
-		elif point =='no':
-			gene_id = xl[args.n -1].replace('P','M')[:-2]
+		gene_id = xl[args.n -1]
+
+		if '.' in gene_id:
+			gene_id = xl[args.n -1].split('.')[0]
+
+		gene_id = re.sub('[PM]', 'G', gene_id)
 		anno_dict[gene_id] = x
+
+	if 'header' not in anno_dict:
+		print 'You need a header line!'
 
 	return anno_dict
 
 # gene_id corresponding to the annotation
-def add_anno(infile, outfile, anno):
+def add_anno(infile, outfile, anno, sep, m):
 	'''for every item of the input list, add the annotation at the end of the line'''
 
-	non_an = infile.readlines()
-	if 'Csa' not in non_an[0]:				# create a header for output
-		header = '%s\t%s\n' % (non_an[0][:-1],'Annotation')
-		outfile.write(header)
-		check_p = non_an[1].split()[0]
-		if '.' in check_p:
-			point = 'yes'
-		else:
-			point = 'no'
-	else:	
-		check_p = non_an[0].split()[0]			# check '.' in gene_id
-		if '.' in check_p:
-			point = 'yes'
-		else:
-			point = 'no'
-		infile.seek(0)
+	anno_dict = an_2_dic(anno)		# anno file to dict
+	tmp = []
 
-	anno_dict = an_2_dic(anno,point)		# anno file to dict
-
-	for x in non_an:
+	for x in infile:
 		add = ''
-		if 'Csa' not in x:					# exclude the non-gene row
+		
+		if x=='\n':
+			continue
+		elif '#' in x:						# add header
+			add = x.replace('\n', '\t') + anno_dict['header']
+			tmp.append(add)
 			continue
 
-		gene_ids = x.split()[args.m-1].split(',')
+		gene = x.split()[m-1]
+		gene = re.sub('[MP]', 'G', gene)
 
-		for gene in gene_ids:				# if ',' in gene row
-			gene = gene.strip()
+		if '.' in gene:
+			gene = gene[:-2]
 
-			if 'M' not in gene:
-				a = gene[4]
-				gene = gene.replace(a,'M')	# replace 'P' or 'G' to 'M'
+		if gene in anno_dict:			# add anno if gene in an-dict
+			add = add + sep + anno_dict[gene]
+		else:
+			add = add + sep + 'None\n'
 
-			if gene in anno_dict:			# add anno if gene in an-dict
-				add = add + args.s + anno_dict[gene][:-1]
-			else:
-				add = add + args.s + 'None'
-
-		add += '\n'
-		idx = non_an.index(x)
-		non_an[idx] = x.replace('\n','\t') + add
+		add = '%s\t%s' % (x[:-1], add)
+		tmp.append(add)
+		add = ''
 	
-	outfile.writelines(non_an[1:])
+	outfile.writelines(tmp)
 
 if __name__ == '__main__':
-	add_anno(args.i, args.o, args.a)
+	add_anno(args.i, args.o, args.a, args.s, args.m)
 	args.o.close()
 	args.i.close()
 	args.a.close()
