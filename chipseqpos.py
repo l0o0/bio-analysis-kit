@@ -13,12 +13,17 @@ args = parse.parse_args()
 
 # read feature pos from gff file
 def pos_D(posfile):
+	'''read gff file into a dict
+	D = {chrom1:{gene1:{feature1:(start,end) ... },
+	gene2:{feature1:(start,end)...}, ...},
+	chrom2:{gene:{feature:(start,end), ... }, ...}, ...}'''
+
 	D = {}
 	f = open(posfile)
 	for x in f:
 
 		if 'mRNA' in x or 'CDS' in x or x =='\n':
-			continue
+			continue		# flitter mrna and cds
 
 		xl = x.split()
 		chrom = xl[0]
@@ -26,14 +31,14 @@ def pos_D(posfile):
 		end = int(xl[4])
 
 		values = re.split('\t|\.|=|,|;', xl[8])
-		gene = values[1].replace('M','G')
+		gene = values[1].replace('M','G')	# geneID formate
 		if chrom not in D:
 			D[chrom] = {}
 		
 		if gene not in D[chrom]:
 			D[chrom][gene] = {}
 
-		if 'gene' in x:
+		if 'gene' in x:		# add gene and upstream 3k freatures
 			D[chrom][gene]['gene'] = (start, end)
 			D[chrom][gene]['Up3k'] = (start-3000, start -1)
 			continue
@@ -63,6 +68,9 @@ def det_fea(peak_pos, geneD):
 
 # read the peak file
 def locate(infile, outfile):
+	'''according the peak's position, find the features in
+	the peak's range'''
+
 	D = pos_D('/share/fg3/Linxzh/Data/Cucumber_ref/Cucumber_20101104.gff3')
 
 	f = open(infile)
