@@ -89,7 +89,13 @@ def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):
 
 		if gene_strand == '+':
 			gene_start = start
-			gene_seq = chr[:-1][gene_start-length:gene_start]
+			pro_start = gene_start-length
+
+			if pro_start < 0:		# gene start pos less than length
+				gene_seq = chr[:-1][:gene_start]
+			else:
+				gene_seq = chr[:-1][gene_start-length:gene_start]
+
 		elif gene_strand == '-':
 			gene_start = end
 			gene_seq = chr[:-1][gene_start + 1:gene_start + length + 1]
