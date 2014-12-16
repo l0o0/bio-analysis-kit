@@ -98,9 +98,13 @@ def locate(infile, outfile):
 #				print res
 				for gene in res:
 					wl =  '%s\t%s\t%s\n' % (x.strip(), gene, '+'.join(res[gene]))
-					tmp.append(wl)
+			else:
+				wl =  '%s\t%s\t%s\n' % (x.strip(), 'None', 'None')
+
 		except KeyError:
-			print chrom
+			wl =  '%s\t%s\t%s\n' % (x.strip(), 'None', 'None')
+
+		tmp.append(wl)
 	
 	o.writelines(tmp)
 
