@@ -37,7 +37,7 @@ def fisher_test(countList):
 	d = countList[2] - b
 
 	p = pvalue(a,b,c,d)
-	return p.two_tail
+	return p.right_tail
 			
 
 # read mapping file 
