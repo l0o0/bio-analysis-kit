@@ -111,8 +111,8 @@ def motif_enrich(D, tissue_moduleD, module_geneD):
 			
 if __name__ == '__main__':
 	D = read_mapping(open('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/motifsInGenes.txt'))
-	tissue_moduleD = read_module('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/module_tissue_p65.txt')
-	module_geneD = read_mapping('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/genesInMotif.txt')
+	tissue_moduleD = read_module(open('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/module_tissue_p65.txt'))
+	module_geneD = read_mapping(open('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/genesInMotif.txt'))
 	motif_enrich(D, tissue_moduleD, module_geneD)
 	
 
