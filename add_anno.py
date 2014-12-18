@@ -9,9 +9,10 @@ import re
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help = 'input a non annotation file',\
 		type= argparse.FileType('r'))
-parser.add_argument("-a", help = "input an annotation file, default value is 1234.txt", type = argparse.FileType('r'),\
-		default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
-parser.add_argument('-o', help = 'the output file', \
+parser.add_argument("-a", action='append', \
+		help = "input an annotation file, default value is 1234.txt, support multi annotation file, -a anno1 -a anno2",\
+		type = argparse.FileType('r'),\default = "/share/fg3/Linxzh/Data/Annotation/1234.txt") \
+		parser.add_argument('-o', help = 'the output file', \
 		type = argparse.FileType('w'))
 parser.add_argument('-m',default = 1,\
 		help='gene id col number of non annotation file, default is 1',\
@@ -83,7 +84,9 @@ def add_anno(infile, outfile, anno, sep, m):
 	outfile.writelines(tmp)
 
 if __name__ == '__main__':
-	add_anno(args.i, args.o, args.a, args.s, args.m)
+	tmpanno = open('tmpanno.txt','w')
+	for anno in args.a:
+		add_anno(args.i, , anno, args.s, args.m)
 	args.o.close()
 	args.i.close()
 	args.a.close()
