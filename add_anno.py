@@ -11,8 +11,8 @@ parser.add_argument("-i", help = 'input a non annotation file',\
 		type= argparse.FileType('r'))
 parser.add_argument("-a", action='append', \
 		help = "input an annotation file, default value is 1234.txt, support multi annotation file, -a anno1 -a anno2",\
-		type = argparse.FileType('r'),\default = "/share/fg3/Linxzh/Data/Annotation/1234.txt") \
-		parser.add_argument('-o', help = 'the output file', \
+		type= argparse.FileType('r'), default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
+parser.add_argument('-o', help = 'the output file', \
 		type = argparse.FileType('w'))
 parser.add_argument('-m',default = 1,\
 		help='gene id col number of non annotation file, default is 1',\
@@ -25,7 +25,7 @@ args=parser.parse_args()
 
 
 # creat a annotation dict
-def an_2_dic(anno):
+def an_2_dict(anno):
 	'''convert the annotation list into a dict, gene id as key, anno as value'''
 
 	anno_dict = {}
@@ -42,7 +42,7 @@ def an_2_dic(anno):
 			gene_id = xl[args.n -1].split('.')[0]
 
 		gene_id = re.sub('[PM]', 'G', gene_id)
-		anno_dict[gene_id] = x
+		anno_dict[gene_id] = x.strip()
 
 	if 'header' not in anno_dict:
 		print 'You need a header line!'
@@ -50,43 +50,56 @@ def an_2_dic(anno):
 	return anno_dict
 
 # gene_id corresponding to the annotation
-def add_anno(infile, outfile, anno, sep, m):
+def add_anno(infile, anno_dict, sep, m):
 	'''for every item of the input list, add the annotation at the end of the line'''
-
-	anno_dict = an_2_dic(anno)		# anno file to dict
-	tmp = []
-
-	for x in infile:
-		add = ''
-		
-		if x=='\n':
-			continue
-		elif '#' in x:						# add header
-			add = x.replace('\n', '\t') + anno_dict['header']
-			tmp.append(add)
-			continue
-
-		gene = x.split()[m-1]
-		gene = re.sub('[MP]', 'G', gene)
-
-		if '.' in gene:
-			gene = gene[:-2]
-
-		if gene in anno_dict:			# add anno if gene in an-dict
+	
+	def match_gene(add, gene, anno_dict, tmpD, sep):
+		if gene in anno_dict:
 			add = add + sep + anno_dict[gene]
 		else:
 			add = add + sep + 'None\n'
 
-		add = '%s\t%s' % (x[:-1], add)
-		tmp.append(add)
-		add = ''
+		tmpD[gene] = add
+		return tmpD
 	
-	outfile.writelines(tmp)
+	tmpD = {}
+	
+	if isinstance(infile,file):		# infile is a file
+		for x in infile:
+			add = ''
+			if x=='\n':
+				continue
+			elif '#' in x:						# add header
+				add = x.replace('\n', '\t') + anno_dict['header']
+				tmpD['header'] = add
+				continue
+
+			gene = x.split()[m-1]
+			gene = re.sub('[MP]', 'G', gene)
+			gene = gene.split('.')[0]
+			tmp = match_gene(add,gene, anno_dict, tmpD, sep)
+	elif isinstance(infile, dict):		# infile is a dict
+		print 'dict'
+		for k,v in infile.items():
+			tmpD = match_gene(v,k, anno_dict, tmpD, sep)
+
+	return tmpD
+
+def write_dict(tmpD, outfile):
+	wl = ['%s\t%s\n' % (k,v) for k,v in tmpD.items()]
+	outfile.writelines(wl)
+
 
 if __name__ == '__main__':
-	tmpanno = open('tmpanno.txt','w')
-	for anno in args.a:
-		add_anno(args.i, , anno, args.s, args.m)
-	args.o.close()
-	args.i.close()
-	args.a.close()
+	print type(args.a)
+	if isinstance(args.a, file):
+		anno1 = an_2_dict(args.a)
+		all_D = add_anno(args.i, anno1, args.s, args.m)
+	else:
+		anno1 = an_2_dict(args.a[0])
+		all_D = add_anno(args.i, anno1, args.s, args.m)
+		for i in args.a[1:]:
+			annoi = an_2_dict(i)
+			all_D = add_anno(all_D, annoi, args.s, args.m)
+
+	write_dict(all_D, args.o)
