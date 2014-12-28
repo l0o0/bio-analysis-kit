@@ -80,7 +80,8 @@ def pos(gff3):							#input gff3 file
 
 # find 2000 bp before the ATG
 def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):	
-	n = 0	
+	n = 0
+	outputList = []
 	for gene in gene_list:
 		start = pos_dict[gene][0]
 		end = pos_dict[gene][1]
@@ -104,7 +105,10 @@ def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):
 				gene_strand += ' reverse_complement'
 
 		n+=1
-		output.write('>' + gene +' | ' + gene_strand + '\n' + gene_seq + '\n')
+		wl = '>%s|%s\n%s\n' % (gene,gene_strand,gene_seq)
+		outputList.append(wl)
+
+	output.writelines(outputList)
 	print "%s genes found!" % n
 
 	output.close()
