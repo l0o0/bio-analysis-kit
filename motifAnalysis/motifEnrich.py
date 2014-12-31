@@ -64,11 +64,16 @@ def read_mapping(infile, dot=False):
 	
 # read module data 
 def read_module(tissus_module):
+	'''{tissue:modules}'''
 #	tissue_module = '/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/module_tissue_p65.txt'
 	
 	tissue_moduleD = {}
 	with open(tissus_module) as f:
 		for i in f:
+
+			if i.startswith('#'):
+				continue
+
 			ilist = i.split()
 
 			if ilist[1] not in tissue_moduleD:
@@ -85,38 +90,41 @@ def motif_in_module(module, module_geneD, D):
 	return motif_list
 
 # write out the result
-def writeout(tissue, out):
+def writeouttissue(tissue, out):
 	outfile = ''.join((tissue,'_motifEnrichment.txt'))
 	with open(outfile, 'w') as f:
 		f.writelines(out)
 
 
 # enrichment analysis
-def motif_enrich(D, tissue_moduleD, module_geneD):
+def motif_enrich(D, module, module_geneD, all_motif_countD, all):
+	out = []
+	out.append(m+'\n')
+	
+	sample_motif_countD = motif_count(motif_in_module(module, module_geneD, D))
+	sample = len(module_geneD[m])
+
+	for motif in sample_motif_countD:
+		countList = [all,all_motif_countD[motif],sample,sample_motif_countD[motif]]
+		p = fisher_test(countList)
+		outline = '--%s\t%s\t%s\n' % (motif, ','.join([str(j) for j in countList]), p)
+		out.append(outline)
+	return out
+
+def tissue_motif_enrich(D, tissue_moduleD, module_geneD):
 	all_motif_countD = motif_count(reduce(lambda x,y:x+y,D.values()))
 	all = len(D)	# gene num in total
 
 	for t,modules in tissue_moduleD.items():	# every tissue
 		out = []
 		for m in modules:						# every module in tissue
-			out.append(m+'\n')
-			sample_motif_countD = motif_count(motif_in_module(m, module_geneD, D))
-			sample = len(module_geneD[m])	# gene num in module
-			for motif in sample_motif_countD:
-				countList = [all,all_motif_countD[motif],sample,sample_motif_countD[motif]]
-				p = fisher_test(countList)
-				outline = '--%s\t%s\t%s\n' % (motif, ','.join([str(j) for j in countList]), p)
-				out.append(outline)
-		
-		writeout(t, out)
+			module_out = motif_enrich(D, m, module_geneD, all_motif_countD, all)	
+			out += module_out
+		writeouttissue(t, out)
 			
 if __name__ == '__main__':
-	D = read_mapping('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/motifsInGenes.txt')
+	D = read_mapping('motifsInGene.txt')
 	tissue_moduleD = read_module('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/module_tissue_p65.txt')
-	module_geneD = read_mapping('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/genesInMotif.txt', True)
-	motif_enrich(D, tissue_moduleD, module_geneD)
-	
-
-	
-
+	module_geneD = read_mapping('/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/genesInModule.txt', True)
+	tissue_motif_enrich(D, tissue_moduleD, module_geneD)
 

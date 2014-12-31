@@ -16,8 +16,7 @@ def get_html(accession, outpath):
 	outhtml.write(htmltext)
 	outhtml.close()
 
-def get_item(accession, itemName):
-	filedir = '/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/MotifHtml/'
+def get_item(filedir, accession, itemName):
 	filename = ''.join((filedir, accession,'.txt'))
 	with open(filename) as handle:
 		handlelist = handle.readlines()
@@ -31,8 +30,8 @@ def get_item(accession, itemName):
 
 
 if __name__ == '__main__':
-	path = 'MotifHtml/'
-	infile = '/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/htmlresult.txt'
+	path = 'MotifAccessionHtml/'
+	infile = 'htmlresult.txt'
 	with open(infile) as handle:
 		for f in handle:
 

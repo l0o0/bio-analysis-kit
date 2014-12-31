@@ -21,42 +21,41 @@ def get_description(accession):
 	return ' '.join(textlist)
 
 # get the html file
-cwd = os.getcwd()
-path='/share/fg3/Linxzh/Workspace/subject/dome/FpkmMax5/unmerged/moduleDist/Motif'
-files = os.listdir(path)
-files = [f for f in files if f.endswith('html')]
+def motif_anno(path):
+	'''path: dir contains PLACE result html file'''
+	files = os.listdir(path)
+	files = [f for f in files if f.endswith('html')]
+	motif_acD = {}
+	cwd = os.getcwd()
 
-
-motif_acD = {}
-
-for f in files:
-	filename = '/'.join((path,f))
-	with open(filename) as handle:
-		fl = handle.readlines()
+	for f in files:
+		filename = '/'.join((path,f))
+		with open(filename) as handle:
+			fl = handle.readlines()
+		
+		header = 85 * '_' + '\n'
+		tail = 43 * '-' + '\n'
+		try:
+			start = fl.index(header)
+			end = fl.index(tail)
+			motif_text = fl[start+1:end -3]
 	
-	header = 85 * '_' + '\n'
-	tail = 43 * '-' + '\n'
-	try:
-		start = fl.index(header)
-		end = fl.index(tail)
-		motif_text = fl[start+1:end -3]
-
-		for motifline in motif_text:
-			lists = motifline.split()
-			motif = lists[4]
-			name = lists[0]
-			if motif not in motif_acD:
-				accession = re.search(r'S\d+', lists[-1]).group()
-				description = get_description(accession)
-				wl = '%s\t%s\t%s\t%s\n' % (motif, name,accession,description)
-				motif_acD[motif]=wl
-	except ValueError:
-		print f
-		continue
-
-os.chdir(cwd)
-with open('htmlresult.txt','w') as handle:
-	handle.writelines(motif_acD.values())	 
+			for motifline in motif_text:
+				lists = motifline.split()
+				motif = lists[4]
+				name = lists[0]
+				if motif not in motif_acD:
+					accession = re.search(r'S\d+', lists[-1]).group()
+					description = get_description(accession)
+					wl = '%s\t%s\t%s\t%s\n' % (motif, name,accession,description)
+					motif_acD[motif]=wl
+		except ValueError:
+			print f
+			continue
+	
+	os.chdir(cwd)
+	with open('htmlresult.txt','w') as handle:
+		handle.writelines(motif_acD.values())	 
 
 
 	
