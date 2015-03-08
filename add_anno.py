@@ -9,9 +9,9 @@ import re
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", help = 'input a non annotation file',\
 		type= argparse.FileType('r'))
-parser.add_argument("-a", action='append', \
+parser.add_argument("-a", \
 		help = "input an annotation file, default value is 1234.txt, support multi annotation file, -a anno1 -a anno2",\
-		type= argparse.FileType('r'), default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
+		default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
 parser.add_argument('-o', help = 'the output file', \
 		type = argparse.FileType('w'))
 parser.add_argument('-m',default = 1,\
@@ -29,8 +29,8 @@ def an_2_dict(anno):
 	'''convert the annotation list into a dict, gene id as key, anno as value'''
 
 	anno_dict = {}
-
-	for x in anno:
+	annof = open(anno)
+	for x in annof:
 
 		if '#' in x:
 			anno_dict['header'] = x
@@ -86,13 +86,14 @@ def add_anno(infile, anno_dict, sep, m):
 	return tmpD
 
 def write_dict(tmpD, outfile):
-	wl = ['%s\t%s\n' % (k,v) for k,v in tmpD.items()]
+	wl = ['%s\t%s\n' % (k,v.strip()) for k,v in tmpD.items()]
 	outfile.writelines(wl)
 
 
 if __name__ == '__main__':
 	print type(args.a)
-	if isinstance(args.a, file):
+	print args.a
+	if isinstance(args.a, str):
 		anno1 = an_2_dict(args.a)
 		all_D = add_anno(args.i, anno1, args.s, args.m)
 	else:
