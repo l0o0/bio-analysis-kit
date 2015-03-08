@@ -7,9 +7,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-i', help='input file')
 parser.add_argument('-o', help='output file')
 parser.add_argument('-d', help='distance * kb', type=int, default=10)
+parser.add_argument('-f', help='fliter the uncluster genes', type=str, default='True', choices=['True','False'])
 args = parser.parse_args()
 
-# read gene-id from module 
+# read gene-id from module, args.i -- input file 
 def read_gene(infile):
 	'''input file format:
 	moduleName1
@@ -39,8 +40,15 @@ def read_pos(infile):
 
 	return posD
 
+# remove unclustered gene from the result line
+def remove_uncluster(outstring):
+	outlist = outstring.split(' | ')
+	outlist = [x for x in outlist if '-' in x]
+	outstr = ' | '.join(outlist)
+	return outstr
+
 # positional cluster
-def cluster(D, posD, outfile, dist=10):
+def cluster(D, posD, outfile, dist=10, f='True'):
 	'''D: input gene, {moduleName: gene1 gene2 ...}
 	   posD: {geneID: start pos}'''
 
@@ -52,6 +60,7 @@ def cluster(D, posD, outfile, dist=10):
 			tmpD[i[3]].append(i)
 
 		return tmpD
+
 # cluster the gene with '-', sep by ' | '
 	def find_cluster(tmpD, posD):
 		outList = []
@@ -61,7 +70,6 @@ def cluster(D, posD, outfile, dist=10):
 			if not geneList:
 				continue
 
-			Marker=[]
 			for i in range(len(geneList)-1):
 
 				d = posD[geneList[i+1]] - posD[geneList[i]]
@@ -70,12 +78,14 @@ def cluster(D, posD, outfile, dist=10):
 					geneList[i] += '-'
 				else:
 					geneList[i] += ' | '
-
-			newline = ''.join(geneList) + '\n'
-
+			
+			newline = ''.join(geneList)
+		
 			if '-' in newline:			# only need cluster genes
+				if f == 'True':
+					newline = remove_uncluster(newline)
+					newline += '\n'
 				outList.append(newline)
-
 
 		return outList
 	
@@ -85,8 +95,8 @@ def cluster(D, posD, outfile, dist=10):
 		outList = find_cluster(tmpD, posD)
 
 		if outList:					# fliter empty out list
-			wl.append(m)
-			wl += outList
+			wl.append(m)			# add module number
+			wl += outList			
 
 	with open(outfile,'w') as f:
 		f.writelines(wl)
@@ -94,4 +104,5 @@ def cluster(D, posD, outfile, dist=10):
 if __name__ == '__main__':
 	D = read_gene(args.i)
 	posD = read_pos('/share/fg3/Linxzh/Data/Cucumber_ref/genes_pos.txt')
-	cluster(D, posD, args.o, args.d)			
+#	posD = read_pos('test_pos.txt')
+	cluster(D, posD, args.o, args.d, args.f)			
