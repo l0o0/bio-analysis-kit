@@ -1,5 +1,5 @@
 #! /bin/env python
-#Date: 2013-10-31, last edit: 2014-11-21
+#Date: 2013-10-31, last edit: 2014-7-9
 #Author: Linxzh version = 0.1.3
 #add the annotation
 
@@ -10,8 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-i", help = 'input a non annotation file',\
 		type= argparse.FileType('r'))
 parser.add_argument("-a", \
-		help = "input an annotation file, default value is 1234.txt, support multi annotation file, -a anno1 -a anno2",\
-		default = "/share/fg3/Linxzh/Data/Annotation/1234.txt")
+		help = "input an annotation file, default value is 1234.txt, support multi annotation file, -a anno1 -a anno2")
 parser.add_argument('-o', help = 'the output file', \
 		type = argparse.FileType('w'))
 parser.add_argument('-m',default = 1,\
