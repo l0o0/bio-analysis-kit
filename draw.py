@@ -85,13 +85,12 @@ if __name__ == '__main__':
         tmp = headregion.split()
         region = [int(tmp[1]), int(tmp[2])]
 
-    D1 = read_data('Gk/trace.chr02.Gk.genotype.ped.GABRIELblocks')
-    D2 = read_data('Gs_r2/chr02.Gs28_r2.genotype.ped.GABRIELblocks')
-    D3 = read_data('Gs_r3/chr02.Gs28_r3.genotype.ped.GABRIELblocks')
-    D4 = read_data('Gs_r4/chr02.Gs28_r4.genotype.ped.GABRIELblocks')
+    D1 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gk/trace.chr02.Gk.genotype.ped.GABRIELblocks')
+    D2 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r2/chr02.Gs28_r2.genotype.ped.GABRIELblocks')
+    D3 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r3/chr02.Gs28_r3.genotype.ped.GABRIELblocks')
+    D4 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r4/chr02.Gs28_r4.genotype.ped.GABRIELblocks')
     
 #    dwg = svgwrite.Drawing(filename='Test.svg', size=(18 * cm, 8 * cm))
-    dwg = svgwrite.Drawing(filename=sys.argv[2], size=(18 * cm, 12 * cm))
     
 #    region = [23712760, 26917128]
     D1 = filter_pos(D1, region)
@@ -107,10 +106,9 @@ if __name__ == '__main__':
     Allpos = sorted(list(set(pos1) | set(pos2) | set(pos3) | set(pos4)))
     distlog = map(lambda x: log(Allpos[x + 1] - Allpos[x], 10), range(len(Allpos) - 1))
 #    print len(Allpos), len(distlog)
-    ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
-#    print ministep
 
     regionlen = region[1] - region[0]
+
     if regionlen > 10000:
         barsize = 0.5
     elif regionlen > 5000:
@@ -118,13 +116,18 @@ if __name__ == '__main__':
     else:
         barsize = 2
 
-    dwg = draw_block(dwg, D1, Allpos, distlog, ministep, 2, barsize)
-    dwg = draw_block(dwg, D2, Allpos, distlog, ministep, 4.5, barsize)
-    dwg = draw_block(dwg, D3, Allpos, distlog, ministep, 7, barsize)
-    dwg = draw_block(dwg, D4, Allpos, distlog, ministep, 9.5, barsize)
-    dwg.add(dwg.text('Gk', insert=(0.5*cm, 2.25*cm)))
-    dwg.add(dwg.text('Gs_r2', insert=(0.5*cm, 4.75*cm)))
-    dwg.add(dwg.text('Gs_r3', insert=(0.5*cm, 7.25*cm)))
-    dwg.add(dwg.text('Gs_r4', insert=(0.5*cm, 9.75*cm)))
-    dwg.add(dwg.text(headregion, insert=(7*cm, 0.5*cm)))
-    dwg.save()
+    if Allpos:
+        dwg = svgwrite.Drawing(filename=sys.argv[2], size=(18 * cm, 12 * cm))
+        ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
+        dwg = draw_block(dwg, D1, Allpos, distlog, ministep, 2, barsize)
+        dwg = draw_block(dwg, D2, Allpos, distlog, ministep, 4.5, barsize)
+        dwg = draw_block(dwg, D3, Allpos, distlog, ministep, 7, barsize)
+        dwg = draw_block(dwg, D4, Allpos, distlog, ministep, 9.5, barsize)
+        dwg.add(dwg.text('Gk', insert=(0.5*cm, 2.25*cm)))
+        dwg.add(dwg.text('Gs_r2', insert=(0.5*cm, 4.75*cm)))
+        dwg.add(dwg.text('Gs_r3', insert=(0.5*cm, 7.25*cm)))
+        dwg.add(dwg.text('Gs_r4', insert=(0.5*cm, 9.75*cm)))
+        dwg.add(dwg.text(headregion, insert=(7*cm, 0.5*cm)))
+        dwg.save()
+    else:
+        print '%s has no marker in this region:%s' % (sys.argv[1], headregion)
