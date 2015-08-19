@@ -107,11 +107,10 @@ if __name__ == '__main__':
     distlog = map(lambda x: log(Allpos[x + 1] - Allpos[x], 10), range(len(Allpos) - 1))
 #    print len(Allpos), len(distlog)
 
-    regionlen = region[1] - region[0]
 
-    if regionlen > 10000:
+    if len(Allpos) > 5000:
         barsize = 0.5
-    elif regionlen > 5000:
+    elif len(Allpos) > 1000:
         barsize = 1
     else:
         barsize = 2
