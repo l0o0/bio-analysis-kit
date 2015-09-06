@@ -1,10 +1,0 @@
-Ä}q(Uadd_annoq]q(Uadd_annoqUargsqUiU	an_2_dictqUparserqUannoiqUall_Dq	U
-write_dictq
-Uanno1qeUmodule_clusterq]q(hUDUposDqhUclusterqUremove_unclusterqU	read_geneqUread_posqeUMutantq]q(UMutantqUsnpfileqUgfffileqUoutfileqUgffdictqUGff_dictqU
-SNP_in_GIDqUget_accessionqeUreverseq]q(hUseqqhUlUnUtmp_idq eU	Profinderq!]q"(U
-fa_to_dictq#hhUposq$Upromoterq%Ustartq&Uchr_dictq'UtUselect_geneq(Upos_dictq)U	gene_listq*eUgetMotifAnnoq+]q,(hhUget_descriptionq-U
-motif_annoq.eUmotifInGenesq/]q0(UoutListq1hUparseq2Umotif_genesq3eUdatetimeq4]q5(U	timedeltaq6UMAXYEARq7Udateq8Udatetime_CAPIq9Utzinfoq:Utimeq;UMINYEARq<Udatetimeq=eUipr_enrich_genesq>]q?(Uto_setq@hUDUsel_iprqAhUM_setqBU
-final_stepqCUipr_dictqDU	M_sel_iprqEeUFindsnp_diff_posqF]qG(Usep_vqHhUfind_snpqIeUmotifEnrichqJ]qK(Umotif_in_moduleqLUwriteouttissueqMUDUfisher_testqNUtissue_motif_enrichqOUmotif_enrichqPhUtissue_moduleDqQh2Umodule_geneDqRUmotif_countqSUread_mappingqTUread_moduleqUeUFqMergeqV]qW(hheU
-trans_fpkmqX]qY(U	fpkm_lineqZhheUgetMotifAccessionHtmlq[]q\(hUhandleq]UfhUget_htmlq^Uflistq_U	accessionq`UpathqaUinfileqbUget_itemqceUshutilqd]qe(UcopyfileqfUmoveqgUcopytreeqhUcopyfileobjqiUcopymodeqjUignore_patternsqkUrmtreeqlUErrorqmUcopyqnUcopy2qoUcopystatqpU	destinsrcqqUWindowsErrorqreUosqs]qt(Upopen4quUexecleqvUpopen3qwUSEEK_CURqxUspawnlpqyUexeclpqzUenvironq{Uspawnvpq|Uspawnlq}Uexecvpq~UmakedirsqUlinesepqÄUP_WAITqÅUspawnvqÇUspawnveqÉUexecvpeqÑUunsetenvqÖUSEEK_SETqÜUgetenvqáUpopen2qàUwalkqâUspawnleqäUexeclqãUnameqåUSEEK_ENDqçUspawnlpeqéU	P_NOWAITOqèUP_NOWAITqêU
-removedirsqëUrenamesqíUspawnvpeqìUexeclpeqîeU
-chipseqposqï]qñ(UlocateqóUbhh2UaUdet_feaqòUtmpqôUpos_DqöeUgetseqqõ]qú(hhUget_seqqùUread_idqûh)h*eu.
