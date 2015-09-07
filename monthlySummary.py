@@ -10,8 +10,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-user = 'linxingzhong@1gene.com.cn'
-pwd = '1123581321Lin'
+user = raw_input('Plez input email address: ') 
+pwd = raw_input('Passwd: ')
 month = '7'
 
 # login and jump into specific folder
