@@ -27,7 +27,6 @@ File2List = function(args) {
     }
 
 
-
 # redefined function of set analyis, add the sample names to the result
 Intersection = function(...) {
     out = Reduce(intersect, list(...))
@@ -248,8 +247,6 @@ WriteInter = function(outlist, outdir) {
 #        print(outfile)
     }
 }
-
-
 
 
 # draw plot
