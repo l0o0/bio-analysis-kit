@@ -30,6 +30,8 @@ def read_data(infile):
     return D
 
 
+
+
 # draw block
 def draw_block(dwg, D, Allpos, distlog, ministep, y, barsize = 0.5):
     y1 = y
@@ -78,55 +80,37 @@ def subdict_keys(D):
         keys += D[i].keys()
     return keys
 
+# read sample info from file
+def read_sample(sampleinfo):
+    out = {}
+    with open(sampleinfo) as handle:
+       filelist = handle.readlines()
+    region = [int(x.strip()) for x in filelist[0].split(':')]
+
+    for l in filelist[1:]:
+        names = l.split()
+        out[names[0]] = filter_pos(read_data(names[1]), region)
+    return out, region 
+
 
 if __name__ == '__main__':
-    with open(sys.argv[1]) as handle:
-        headregion = handle.readlines()[0].strip()
-        tmp = headregion.split()
-        region = [int(tmp[1]), int(tmp[2])]
-
-    D1 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gk/trace.chr02.Gk.genotype.ped.GABRIELblocks')
-    D2 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r2/chr02.Gs28_r2.genotype.ped.GABRIELblocks')
-    D3 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r3/chr02.Gs28_r3.genotype.ped.GABRIELblocks')
-    D4 = read_data('/nfs3/onegene/user/group1/linxingzhong/workspace/8-7/Gs_r4/chr02.Gs28_r4.genotype.ped.GABRIELblocks')
-    
-#    dwg = svgwrite.Drawing(filename='Test.svg', size=(18 * cm, 8 * cm))
-    
-#    region = [23712760, 26917128]
-    D1 = filter_pos(D1, region)
-    D2 = filter_pos(D2, region)
-    D3 = filter_pos(D3, region)
-    D4 = filter_pos(D4, region)
-#    print len(D1), len(D2) 
-    pos1 = subdict_keys(D1)
-    pos2 = subdict_keys(D2)
-    pos3 = subdict_keys(D3)
-    pos4 = subdict_keys(D4)
-
-    Allpos = sorted(list(set(pos1) | set(pos2) | set(pos3) | set(pos4)))
+    sample_data, region  = read_sample(sys.argv[1])
+    dwg = svgwrite.Drawing(filename=sys.argv[2], size=(18 * cm, 15 * cm))
+    Allpos = sorted(reduce(lambda x,y : set(x) | set(subdict_keys(y)), sample_data.values()[1:], subdict_keys(sample_data.values()[0])))
+    print "Number of markers:%s, max:%s, min:%s\n" % "len(Allpos), max(Allpos), min(Allpos)"
     distlog = map(lambda x: log(Allpos[x + 1] - Allpos[x], 10), range(len(Allpos) - 1))
-#    print len(Allpos), len(distlog)
+    ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
 
-
-    if len(Allpos) > 5000:
+    regionlen = region[1] - region[0]
+    if regionlen > 10000:
         barsize = 0.5
-    elif len(Allpos) > 1000:
+    elif regionlen > 5000:
         barsize = 1
     else:
         barsize = 2
 
-    if Allpos:
-        dwg = svgwrite.Drawing(filename=sys.argv[2], size=(18 * cm, 12 * cm))
-        ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
-        dwg = draw_block(dwg, D1, Allpos, distlog, ministep, 2, barsize)
-        dwg = draw_block(dwg, D2, Allpos, distlog, ministep, 4.5, barsize)
-        dwg = draw_block(dwg, D3, Allpos, distlog, ministep, 7, barsize)
-        dwg = draw_block(dwg, D4, Allpos, distlog, ministep, 9.5, barsize)
-        dwg.add(dwg.text('Gk', insert=(0.5*cm, 2.25*cm)))
-        dwg.add(dwg.text('Gs_r2', insert=(0.5*cm, 4.75*cm)))
-        dwg.add(dwg.text('Gs_r3', insert=(0.5*cm, 7.25*cm)))
-        dwg.add(dwg.text('Gs_r4', insert=(0.5*cm, 9.75*cm)))
-        dwg.add(dwg.text(headregion, insert=(7*cm, 0.5*cm)))
-        dwg.save()
-    else:
-        print '%s has no marker in this region:%s' % (sys.argv[1], headregion)
+    for i,j in enumerate(sample_data.keys()):
+        print j
+        dwg = draw_block(dwg, sample_data[j], Allpos, distlog, ministep, 2+i*2.5, barsize)
+        dwg.add(dwg.text(j, insert=(0.5*cm, (2.25+i*2.5)*cm)))
+    dwg.save()
