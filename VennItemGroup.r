@@ -257,7 +257,7 @@ DrawVenn = function(datalist, outdir) {
     cat.cex =1.3,cat.fontfamily = "serif",cat.default.pos = "outer",
     margin=0.12,cat.dist=rep(0.06,length(datalist)))
 
-    picname = paste(outdir, '/', paste(names(datalist), collapse='&'), 
+    picname = paste(outdir, '/', paste(names(datalist), collapse='--'), 
     '_venn.png', sep='')
 
     png(picname, 540, 540)
