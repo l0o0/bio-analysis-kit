@@ -19,14 +19,19 @@ def read_data(infile):
     with open(infile) as handle:
         for f in handle:
             if f.startswith('BLOCK'):
-                pos = [ int(x) for x in f.split()[3:] ]
+                if marker:
+                    marker_t = marker_trans(marker)
+                    D[i] = dict(zip(pos, marker_t))
+                    marker = []
+                pos = [int(x) for x in f.split()[3:]]
                 i += 1
             elif f.startswith('Multiallelic'):
-                marker_t = marker_trans(marker)
-                D[i] = dict(zip(pos, marker_t))
-                marker = []
+                continue
             else:
                 marker.append(f.split()[0])
+    marker_t = marker_trans(marker)
+    D[i] = dict(zip(pos, marker_t))
+
     return D
 
 
@@ -36,16 +41,23 @@ def read_data(infile):
 def draw_block(dwg, D, Allpos, distlog, ministep, y, barsize = 0.5):
     y1 = y
     y2 = y + 0.5
+    step_list = [1,2,3,4,5,4,3,2,1]
     dwg.add(dwg.rect(insert=(2 * cm, y1 * cm), size=(14 * cm, 0.5 * cm), fill='none', stroke='black', stroke_width=0.5))
-    for block in D:
+    blocks = D.keys()
+    for block_index, block in enumerate(blocks):
         pos = D[block]
         maxidx = Allpos.index(max(pos))
         minidx = Allpos.index(min(pos))
+
         if minidx == 0:
-            blockposX = 2 + ((maxidx + sum(distlog[:maxidx - 1])))/2 * ministep
+            blockposX = [2, 2 + ((maxidx + sum(distlog[:maxidx - 1]))) * ministep]
         else:
-            blockposX = 2 + ((maxidx + sum(distlog[:maxidx - 1])) + (minidx + sum(distlog[:minidx - 1])))/2 * ministep
-        dwg.add(dwg.line(start=(blockposX*cm, y1*cm), end=(blockposX*cm,y2*cm), stroke='red', stroke_width=0.5))
+            blockposX = [2 + (maxidx + sum(distlog[:maxidx - 1])) * ministep, 2+ (minidx + sum(distlog[:minidx - 1])) * ministep]
+
+        step_index = block_index % 9
+        dwg.add(dwg.line(start=(blockposX[0]*cm, (step_list[step_index]* 0.1 - 0.05 + y1)*cm), end=(blockposX[1]*cm,
+               (step_list[step_index]* 0.1 - 0.05 + y1)*cm), stroke="rgb(0,82,156)", stroke_width=1))
+
         for p in pos:
             if p in Allpos:
                 idx = Allpos.index(p)
@@ -96,21 +108,25 @@ def read_sample(sampleinfo):
 if __name__ == '__main__':
     sample_data, region  = read_sample(sys.argv[1])
     dwg = svgwrite.Drawing(filename=sys.argv[2], size=(18 * cm, 15 * cm))
-    Allpos = sorted(reduce(lambda x,y : set(x) | set(subdict_keys(y)), sample_data.values()[1:], subdict_keys(sample_data.values()[0])))
-    print "Number of markers:%s, max:%s, min:%s\n" % "len(Allpos), max(Allpos), min(Allpos)"
+    print len(sample_data)
+    if len(sample_data) > 1:
+        Allpos = sorted(reduce(lambda x,y : set(x) | set(subdict_keys(y)), sample_data.values()[1:], subdict_keys(sample_data.values()[0])))
+    else:
+        Allpos = sorted(set(subdict_keys(sample_data.values()[0])))
+#    print Allpos
+    print "Number of markers:%s, max:%s, min:%s\n" % (len(Allpos), max(Allpos), min(Allpos))
+    dwg.add(dwg.text('Pos: %s - %s' % (min(Allpos), max(Allpos)), insert=(0.1*cm, 0.5*cm), style="font-size:10px; font-family:Arial"))
     distlog = map(lambda x: log(Allpos[x + 1] - Allpos[x], 10), range(len(Allpos) - 1))
     ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
 
-    regionlen = region[1] - region[0]
-    if regionlen > 10000:
+    if len(Allpos) > 10000:
         barsize = 0.5
-    elif regionlen > 5000:
+    elif len(Allpos) > 5000:
         barsize = 1
     else:
         barsize = 2
-
-    for i,j in enumerate(sample_data.keys()):
-        print j
+    for i,j in enumerate(sorted(sample_data.keys())):
+        print '%s, BLOCKS: %s' % (j, len(sample_data[j]))
         dwg = draw_block(dwg, sample_data[j], Allpos, distlog, ministep, 2+i*2.5, barsize)
-        dwg.add(dwg.text(j, insert=(0.5*cm, (2.25+i*2.5)*cm)))
+        dwg.add(dwg.text(j, insert=(0.5*cm, (2.25+i*2.5)*cm), style="font-size:10px"))
     dwg.save()
