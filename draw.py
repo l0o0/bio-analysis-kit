@@ -97,11 +97,15 @@ def read_sample(sampleinfo):
     out = {}
     with open(sampleinfo) as handle:
        filelist = handle.readlines()
-    region = [int(x.strip()) for x in filelist[0].split(':')]
+       positions = filelist[0].split(':')
+    region = [positions[0], int(positions[1]), int(positions[2])]
 
     for l in filelist[1:]:
         names = l.split()
-        out[names[0]] = filter_pos(read_data(names[1]), region)
+        if len(names) >1:
+            out[names[0]] = filter_pos(read_data(names[1]), region[1:])
+        else:
+            out[names[0]] = {}
     return out, region 
 
 
@@ -115,7 +119,7 @@ if __name__ == '__main__':
         Allpos = sorted(set(subdict_keys(sample_data.values()[0])))
 #    print Allpos
     print "Number of markers:%s, max:%s, min:%s\n" % (len(Allpos), max(Allpos), min(Allpos))
-    dwg.add(dwg.text('Pos: %s - %s' % (min(Allpos), max(Allpos)), insert=(0.1*cm, 0.5*cm), style="font-size:10px; font-family:Arial"))
+    dwg.add(dwg.text('%s:%s-%s' % (region[0], min(Allpos), max(Allpos)), insert=(0.1*cm, 0.5*cm), style="font-size:8px; font-family:Arial"))
     distlog = map(lambda x: log(Allpos[x + 1] - Allpos[x], 10), range(len(Allpos) - 1))
     ministep = round(14.0 / (int(sum(distlog)) + len(Allpos)), 6)
 
@@ -127,6 +131,11 @@ if __name__ == '__main__':
         barsize = 2
     for i,j in enumerate(sorted(sample_data.keys())):
         print '%s, BLOCKS: %s' % (j, len(sample_data[j]))
-        dwg = draw_block(dwg, sample_data[j], Allpos, distlog, ministep, 2+i*2.5, barsize)
-        dwg.add(dwg.text(j, insert=(0.5*cm, (2.25+i*2.5)*cm), style="font-size:10px"))
+# add empty chromosome 
+        if sample_data[j]:
+            dwg = draw_block(dwg, sample_data[j], Allpos, distlog, ministep, 2+i*2.5, barsize)
+        else:
+            dwg.add(dwg.rect(insert=(2 * cm, (2+i*2.5) * cm), size=(14 * cm, 0.5 * cm), fill='none', stroke='black', stroke_width=0.5))
+
+        dwg.add(dwg.text(j, insert=(0.5*cm, (2.25+i*2.5)*cm), style="font-size:8px"))
     dwg.save()
