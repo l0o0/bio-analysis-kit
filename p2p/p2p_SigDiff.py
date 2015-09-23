@@ -21,13 +21,26 @@ def read_pp(infile):
     else:
         handle = open(infile)
     pplist = handle.readlines()
-    return pplist
+    pp1 = []; pp2 = []
+
+    for p in pplist:
+        plist = p.split()
+        pp1.append(plist[0])
+        pp2.append(plist[1])
+
+    return pplist, pp1, pp2
 
 
 def read_dge(infile):
     with open(infile) as handle:
         flist = handle.readlines()
     return [x.split()[0] for x in flist]
+
+
+def pick_out(pplist, pp1, pp2, dgelist):
+    allset = set(pp1) | set(pp2) | set(dgelist)
+
+    
 
 
 if __name__ == '__main__':
