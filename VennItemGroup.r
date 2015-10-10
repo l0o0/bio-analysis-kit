@@ -2,7 +2,6 @@
 # Created by Linxingzhong at 2015-7-24
 # get items in the intersection of venn plot
 
-library('tools')
 library('VennDiagram')
 
 
@@ -19,7 +18,7 @@ options(stringsAsFactors=F)
 File2List = function(args) {
     tmpList = list()
         for (arg in args) {
-            name = basename(file_path_sans_ext(arg))
+            name = strsplit(basename(arg), '.', fixed=T)[[1]][1]
             geneList = read.table(arg, header=T, sep='\t', fill=TRUE, quote="", stringsAsFactors=F)[,1]
             tmpList[[name]] = geneList
         }
