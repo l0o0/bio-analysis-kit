@@ -242,8 +242,9 @@ InterItems = function(datalist) {
 WriteInter = function(outlist, outdir) {
     for (i in 1:length(outlist)) {
         outfile = paste(outdir, '/', names(outlist[i]), '_', length(outlist[[i]]), '.txt', sep = '')
-        names(outlist[[i]]) = names(outlist[i])
-        write.table(outlist[[i]], file= outfile, row.names=FALSE, sep='\t', quote=F)
+        tmpdataframe = as.data.frame(outlist[[i]])
+        names(tmpdataframe) = 'Gene'
+        write.table(tmpdataframe, file= outfile, row.names=FALSE, sep='\t', quote=F)
 #        print(outfile)
     }
 }
