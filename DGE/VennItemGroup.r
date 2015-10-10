@@ -9,8 +9,9 @@ args = commandArgs(TRUE)
 options(stringsAsFactors=F)
 #-----------------------------------------------------
 #               USAGE
-# Rscript VennItemGroup.r <outdir> <file1> <file2> <file3> ...
-#
+# Rscript VennItemGroup.r <outdir> 1/2 <file1> <file2> <file3> ...
+#       1 : for venn drawing
+#       2 : for genes groups
 #----------------------------------------------------
 
 
@@ -237,6 +238,23 @@ InterItems = function(datalist) {
 
 
 
+# find out specific and common genes among many DGE output files 
+Uniq_Comm = function(datalist) {
+    outlist = list()
+    com_genes = Reduce(intersect, datalist)
+    outlist[['Common_genes']] = com_genes
+    for (i in 1:length(datalist)) {
+        tmpunion = Reduce(union, datalist[-i])
+        tmpinter = intersect(tmpunion, datalist[[i]])
+        spegenes = setdiff(datalist[[i]], tmpinter)
+        tmpname = paste(names(datalist)[i],'_Specific', sep='')
+        outlist[['tmpname']] = spegenes
+        }
+    return outlist
+}
+
+
+
 # write inter items to file 
 WriteInter = function(outlist, outdir) {
     for (i in 1:length(outlist)) {
@@ -269,8 +287,14 @@ DrawVenn = function(datalist, outdir) {
 # check outdir otherwise create
 dir.create(args[1], showWarnings = FALSE)
 
-filenames = args[-1]
+filenames = args[-c(1,2)]
 tmpList = File2List(filenames)
-DrawVenn(tmpList, args[1])
-outlist = InterItems(tmpList)
-WriteInter(outlist, args[1])
+
+if (args[2] == '1') {
+    DrawVenn(tmpList, args[1])
+    outlist = InterItems(tmpList)
+    WriteInter(outlist, args[1])
+} else if (args[2] == '2') {
+    outlist = Uniq_Comm(tmplist)
+    WriteInter(outlist, args[1])
+}
