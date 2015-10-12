@@ -248,9 +248,9 @@ Uniq_Comm = function(datalist) {
         tmpinter = intersect(tmpunion, datalist[[i]])
         spegenes = setdiff(datalist[[i]], tmpinter)
         tmpname = paste(names(datalist)[i],'_Specific', sep='')
-        outlist[['tmpname']] = spegenes
+        outlist[[tmpname]] = spegenes
         }
-    return outlist
+    return(outlist)
 }
 
 
@@ -295,6 +295,6 @@ if (args[2] == '1') {
     outlist = InterItems(tmpList)
     WriteInter(outlist, args[1])
 } else if (args[2] == '2') {
-    outlist = Uniq_Comm(tmplist)
+    outlist = Uniq_Comm(tmpList)
     WriteInter(outlist, args[1])
 }
