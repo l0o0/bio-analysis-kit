@@ -1,8 +1,15 @@
 #!/usr/bin/python
 
+#-----------------------------------------------------
+# python script.py Basic_Statistics_of_Sequencing_Quality.txt Statistics_of_Filtered_Reads.txt output.txt
+#-----------------------------------------------------
 
 import sys
 import os
+
+if len(sys.argv) != 3:
+    print "python script.py Basic_Statistics_of_Sequencing_Quality.txt Statistics_of_Filtered_Reads.txt output.txt"
+    sys.exit()
 
 with open(sys.argv[1]) as handle:
     basic = handle.readlines()
