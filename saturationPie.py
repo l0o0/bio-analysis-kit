@@ -6,8 +6,7 @@
 
 import sys
 import os
-
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     print "python script.py Basic_Statistics_of_Sequencing_Quality.txt Statistics_of_Filtered_Reads.txt output.txt"
     sys.exit()
 
