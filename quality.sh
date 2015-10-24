@@ -41,6 +41,7 @@ do
         suffix=${old##*_}
         new=${index2sample[$tmpindex]}_${suffix}
         old2new[$old]=$new
+        ln -s $i $new
         echo -e "$old\t$new" >> old2new.txt
         echo -e "/nfs/onegene/user/1gene/charles/bin/phred33to64 $i $new" > $4/ph64/${new%%.*}.sh
     fi
