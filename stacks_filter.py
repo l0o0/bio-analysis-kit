@@ -19,18 +19,28 @@ def similarity(s, l1, l2, simi=0.99):
 if __name__ == '__main__':
     with open(sys.argv[1]) as handle:
         filelist = handle.readlines()
+
     start_col = 2
-    tmplist = filelist[0].strip().split('\t')[start_col:]
-    out = []
+    tmplist = [filelist[0].strip().split('\t')]
+    out = [filelist[0]]
 
     for f in filelist[1:]:
-        flist = filelist[0].strip().split('\t')[start_col:]
-        for tmp_item in tmplist:
-            if not similarity(start_col, flist, tmp_item):
-                out.append(f)
-                tmplist.append(flist)
+        flist = f.strip().split('\t')
+        flag = 0
 
-    with open(sys.argv[2]) as handle:
+        for tmp_item in tmplist:
+            if similarity(start_col, flist, tmp_item):
+#                print flist[0], tmp_item[0], 'simi'
+                break
+            else:
+                flag += 1
+        if flag == len(tmplist):
+            tmplist.append(flist)
+            out.append(f)
+               
+
+#    print len(out)
+    with open(sys.argv[2], 'w') as handle:
         handle.writelines(out)
 
 
