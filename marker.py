@@ -37,11 +37,12 @@ def segregation(seg, sampleNum):
     return set(seglist), segfeq
 
 if __name__ == '__main__':
+    sample_num = 148
     with open(sys.argv[1]) as handle:
         fl = handle.readlines()
         out = []
         filtered = []
-        for f in fl:
+        for f in fl[5:(len(fl)-sample_num -2)]:
             flist = f.strip().split()
             marker = flist[0]
             seg = flist[1]
