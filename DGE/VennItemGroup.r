@@ -1,4 +1,4 @@
-#!/bin/env Rscript
+#!/nfs2/pipe/RNA/soft/R-3.1.2/bin/Rscript
 # Created by Linxingzhong at 2015-7-24
 # get items in the intersection of venn plot
 
