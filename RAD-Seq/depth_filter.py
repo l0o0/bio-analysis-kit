@@ -24,7 +24,7 @@ def filter_files(indir):
 
 # 
 def stacks_depth(marker_locus, infile):
-    D = dict(zip(marker_locus, ["-"] * len(marker_locus))) 
+    D = dict(zip(marker_locus, ["--"] * len(marker_locus))) 
     handle = gzip.open(infile)
     for f in handle:
         flist = f.split()
