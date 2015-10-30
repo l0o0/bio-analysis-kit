@@ -8,7 +8,9 @@
 # $2 == index of index
 # $3 == raw data path 
 # $4 == working dir 
-# sh quality.sh index2sample.txt <index num> <rawdata path> <working dir>
+# $5 == reads length
+# $6 == data size
+# sh quality.sh index2sample.txt <index num> <rawdata path> <working dir> <read length> <data size in Gb>
 #------------------------------------------------------------------------
 
 #echo $1,$2,$3,$4
@@ -48,9 +50,11 @@ do
 done
 
 # for filtering
+mkdir $4/cut
 for j in ${index2sample[*]}
 do
     mkdir $4/filter/$j
     echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/ph64/${j}_R1.fastq.gz -2 $4/ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 10 -q 0.5 -n 0.05 -i -c 0 -o $4/filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/filter/$j/$j.sh
+    echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/cutFq2.pl ${j}_R1.fq.gz ${j}_R2.fq.gz $5 ${j} $6" > $4/cut/$j.sh
 done
     
