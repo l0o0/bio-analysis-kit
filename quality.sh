@@ -17,6 +17,7 @@
 
 if [ $# -lt 4 ]; then
     echo "sh quality.sh index2sample.txt <index num> <rawdata path> <working dir>"
+    echo "index2sample.list : index1<tab>sample1"
     exit 0 
 fi
 
