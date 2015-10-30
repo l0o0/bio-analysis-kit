@@ -55,7 +55,7 @@ InterItems = function(datalist) {
     }
     else if (m == 2) {
         cross = Intersection(datalist[[1]], datalist[[2]])
-        outlist[[paste(Names, collapse="@")]] = cross
+        outlist[[paste(Names, collapse="-")]] = cross
         a12 = setdiff(datalist[[1]], cross)
         outlist[[paste(Names, collapse="-")]] = a12
         a21 = setdiff(datalist[[2]], cross)
@@ -273,7 +273,7 @@ DrawVenn = function(datalist, outdir) {
     lwd = 1,fill = rainbow(length(datalist)),alpha = 0.40,cex = 1,
     fontfamily = "serif",fontface = "bold",cat.col = "black",
     cat.cex =1.3,cat.fontfamily = "serif",cat.default.pos = "outer",
-    margin=0.12,cat.dist=rep(0.06,length(datalist)))
+    margin=0.12,cat.dist=rep(0.06,length(datalist)), col='transparent')
 
     picname = paste(outdir, '/', paste(names(datalist), collapse='--'), 
     '_venn.png', sep='')
