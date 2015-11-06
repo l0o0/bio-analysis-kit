@@ -4,6 +4,10 @@ import math
 import sys
 
 
+if len(sys.argv) != 6:
+    print "USAGE: python script.py input.loc summary.txt output.txt ProSampleNum chi_pvalue"
+    sys.exit(0)
+
 
 def chi_test(alist, tlist, pvalue):
     
@@ -37,7 +41,7 @@ def segregation(seg, sampleNum):
     return set(seglist), segfeq
 
 if __name__ == '__main__':
-    sample_num = 148
+    sample_num = int(sys.argv[4])
     with open(sys.argv[1]) as handle:
         fl = handle.readlines()
         out = []
@@ -46,9 +50,9 @@ if __name__ == '__main__':
             flist = f.strip().split()
             marker = flist[0]
             seg = flist[1]
-            seglist, segfeq = segregation(seg, 148)
+            seglist, segfeq = segregation(seg, sample_num)
             afeq = [flist[2:].count(i) for i in seglist]
-            chi, df, sig = chi_test(afeq, segfeq, sys.argv[4])
+            chi, df, sig = chi_test(afeq, segfeq, sys.argv[5])
             if sig == 'No sig':
                 filtered.append(f)
             out.append('%s\t%5g\t%s\t%s\n' % (marker, chi, df, sig))
@@ -57,5 +61,3 @@ if __name__ == '__main__':
         handle.writelines(out)
     with open(sys.argv[3], 'w') as handle:
         handle.writelines(filtered)
-
-    
