@@ -3,7 +3,7 @@
 import sys
 
 
-if len(sys.argv) != 4:
+if len(sys.argv) != 5:
     print "USAGE: python filter.py input.loc output.loc missingRate(float) ProSampleNum(int)"
     sys.exit(0)
 
