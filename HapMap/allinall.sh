@@ -14,5 +14,6 @@ do
         echo -e "${j%%.*}\t${j}" >> chr${i}_sample.txt
     done
     printf "chr%s drawing...\n" $i
+    python draw.py chr${i}_sample.txt reigon.txt chr${i}.svg
     printf "chr%s done.\n" $i
 done
