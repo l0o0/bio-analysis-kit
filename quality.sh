@@ -16,7 +16,7 @@
 #echo $1,$2,$3,$4
 
 if [ $# -lt 4 ]; then
-    echo "sh quality.sh index2sample.txt <index num> <rawdata path> <working dir>"
+    echo "sh quality.sh index2sample.txt <index num> <rawdata path> <working dir> <readlength> <datasize(G)>"
     echo "index2sample.list : index1<tab>sample1"
     exit 0 
 fi
@@ -46,7 +46,7 @@ do
         old2new[$old]=$new
         ln -s $i $new
         echo -e "$old\t$new" >> old2new.txt
-        echo -e "/nfs/onegene/user/1gene/charles/bin/phred33to64 $i $new" > $4/ph64/${new%%.*}.sh
+        echo -e "/nfs/onegene/user/1gene/charles/bin/phred33to64 ../$new $new" > $4/ph64/${new%%.*}.sh
     fi
 done
 
