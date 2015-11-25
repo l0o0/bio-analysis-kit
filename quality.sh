@@ -55,7 +55,7 @@ mkdir $4/cut
 for j in ${index2sample[*]}
 do
     mkdir $4/filter/$j
-    echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/ph64/${j}_R1.fastq.gz -2 $4/ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 10 -q 0.5 -n 0.05 -i -c 0 -o $4/filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/filter/$j/$j.sh
-    echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/cutFq2.pl ${j}_R1.fq.gz ${j}_R2.fq.gz $5 ${j} $6" > $4/cut/$j.sh
+    echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/ph64/${j}_R1.fastq.gz -2 $4/ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 20 -q 0.3 -n 0.02 -i -c 0 -o $4/filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/filter/$j/$j.sh
+	echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/cutFq2.pl $4/filter/${j}_R1.fq.gz $4/filter/${j}_R2.fq.gz $5 ${j} $6" > $4/cut/$j.sh
 done
     
