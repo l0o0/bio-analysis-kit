@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /nfs3/onegene/user/group1/linxingzhong/workspace/bio2.7.10/bin/activate
+
 read -p "Please input chromosome number(int): " chrNum
 echo $chrNum
 
@@ -14,6 +16,8 @@ do
         echo -e "${j%%.*}\t${j}" >> chr${i}_sample.txt
     done
     printf "chr%s drawing...\n" $i
-    python draw.py chr${i}_sample.txt reigon.txt chr${i}.svg
+    python /nfs3/onegene/user/group1/linxingzhong/scripts/bio/HapMap/draw.py chr${i}_sample.txt region.txt chr${i}.svg
     printf "chr%s done.\n" $i
 done
+
+deactivate
