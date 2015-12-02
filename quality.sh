@@ -30,7 +30,7 @@ declare -A old2new
 # read index and sample file
 while read line
 do
-    read a b <<< `echo $line | cut -f 1,2`
+    read a b <<< `echo $line | awk '{print $1"\t"$2}'`
     index2sample[$a]=$b
 done < $1
 
@@ -51,6 +51,11 @@ do
 done
 
 # for filtering
+G=$6
+if [ $G -eq 0 ]; then
+    G=''
+fi
+
 mkdir $4/cut
 for j in ${index2sample[*]}
 do
