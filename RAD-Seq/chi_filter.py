@@ -46,14 +46,18 @@ if __name__ == '__main__':
         fl = handle.readlines()
         out = []
         filtered = []
-        for f in fl[5:(len(fl)-sample_num -2)]:
+        for f in fl:
             flist = f.strip().split()
             marker = flist[0]
             seg = flist[1]
             seglist, segfeq = segregation(seg, sample_num)
-            afeq = [flist[2:].count(i) for i in seglist]
+            # sort genotype letters 
+            prolist = [''.join(sorted(x)) for x in flist[2:]]
+            afeq = [prolist.count(i) for i in seglist]
+
             chi, df, sig = chi_test(afeq, segfeq, sys.argv[5])
             if sig == 'No sig':
+                f = '\t'.join((marker,seg,'\t'.join(prolist),'\n'))
                 filtered.append(f)
             out.append('%s\t%5g\t%s\t%s\n' % (marker, chi, df, sig))
 
