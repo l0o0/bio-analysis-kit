@@ -59,7 +59,7 @@ if __name__ == '__main__':
             if sig == 'No sig':
                 f = '\t'.join((marker,seg,'\t'.join(prolist),'\n'))
                 filtered.append(f)
-            out.append('%s\t%5g\t%s\t%s\n' % (marker, chi, df, sig))
+            out.append('%s\t%5g\t%s\t%s\t%s\t%s\n' % (marker, chi, df, str(afeq), str(segfeq), sig))
 
     with open(sys.argv[2], 'w') as handle:
         handle.writelines(out)
