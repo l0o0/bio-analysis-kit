@@ -18,6 +18,7 @@
 if [ $# -lt 4 ]; then
     echo "sh quality.sh index2sample.txt <index num> <rawdata path> <working dir> <readlength> <datasize(G)>"
     echo "index2sample.list : index1<tab>sample1"
+    echo "index is seperated by '_-'"
     exit 0 
 fi
 
@@ -44,7 +45,7 @@ do
         suffix=${old##*_}
         new=${index2sample[$tmpindex]}_${suffix}
         old2new[$old]=$new
-        ln -s $i $new
+        ln -s $i $4/$new
         echo -e "$old\t$new" >> old2new.txt
         echo -e "/nfs/onegene/user/1gene/charles/bin/phred33to64 ../$new $new" > $4/ph64/${new%%.*}.sh
     fi
@@ -60,7 +61,7 @@ mkdir $4/cut
 for j in ${index2sample[*]}
 do
     mkdir $4/filter/$j
-    echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/ph64/${j}_R1.fastq.gz -2 $4/ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 20 -q 0.3 -n 0.02 -i -c 0 -o $4/filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/filter/$j/$j.sh
+    echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/ph64/${j}_R1.fastq.gz -2 $4/ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 20 -q 0.3 -n 0.02 -i -c 0 -o $4/filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/filter/$j.sh
 	echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/cutFq2.pl $4/filter/${j}_R1.fq.gz $4/filter/${j}_R2.fq.gz $5 ${j} $6" > $4/cut/$j.sh
 done
     
