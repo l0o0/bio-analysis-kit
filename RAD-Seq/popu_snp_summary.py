@@ -16,7 +16,7 @@ def CalRate(inlist):
     home = inlist.count(1)
     hete = inlist.count(-1)
     all = float(len(inlist))
-    return "%s\t%.2f\t%s\t%.2f\t%s\t%.2f\n" % (home, home/all, hete, hete/all, miss, miss/all)
+    return "%s\t%s\t%.2f%%\t%s\t%.2f%%\t%s\t%.2f%%\n" % (home + hete, home, home/all*100, hete, hete/all*100, miss, miss/all*100)
 
 def PopSNP(infile, sampleNum):
     snp_dict = dict((k,[]) for k in range(1,sampleNum + 1))
@@ -33,7 +33,7 @@ def PopSNP(infile, sampleNum):
 
 if __name__ == "__main__":
     snp_dict = PopSNP(sys.argv[1],int(sys.argv[2]))
-    out = ['Sample\tHome\tHome-rate\tHete\tHete-rate\tMiss\tMiss-rate\n']
+    out = ['Sample\tAll\tHome\tHome-rate\tHete\tHete-rate\tMiss\tMiss-rate\n']
     for k in snp_dict:
         ratio = CalRate(snp_dict[k])
         out.append('%s\t%s' % (k, ratio))

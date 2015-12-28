@@ -11,7 +11,8 @@ sample= int(sys.argv[4])
 missnum = int(sample * float(sys.argv[3])) + 1
 with open(sys.argv[1]) as handle:
     filelist = handle.readlines()
-    markerlist = filelist[5:-(sample+1)]
+#    markerlist = filelist[5:-(sample+1)]
+    markerlist = filelist
 
 out = [x for x in markerlist if x.count('--') < missnum and x.strip()]
 print len(out)
