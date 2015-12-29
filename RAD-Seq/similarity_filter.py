@@ -4,6 +4,10 @@
 
 import sys
 
+if len(sys.argv) != 4:
+    print "USAGE: python script.py inputfile outfile similarity(float)"
+    sys.exit(0)
+
 
 def similarity(s, l1, l2, simi=0.99):
     thresh_num = int((len(l1) -s) * (1-simi) + 1)
@@ -29,7 +33,7 @@ if __name__ == '__main__':
         flag = 0
 
         for tmp_item in tmplist:
-            if similarity(start_col, flist, tmp_item):
+            if similarity(start_col, flist, tmp_item, float(sys.argv[3])):
 #                print flist[0], tmp_item[0], 'simi'
                 break
             else:
