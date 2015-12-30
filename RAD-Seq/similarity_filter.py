@@ -26,22 +26,16 @@ if __name__ == '__main__':
 
     start_col = 2
     tmplist = [filelist[0].strip().split('\t')]
-    out = [filelist[0]]
-
-    for f in filelist[1:]:
-        flist = f.strip().split('\t')
-        flag = 0
-
-        for tmp_item in tmplist:
-            if similarity(start_col, flist, tmp_item, float(sys.argv[3])):
-#                print flist[0], tmp_item[0], 'simi'
+    out = []
+    n = len(filelist)
+    for i in range(n):
+        flag = 1
+        for j in range(i+1,n):
+            if similarity(start_col, filelist[i], filelist[j], float(sys.argv[3])):
+                flag = 0
                 break
-            else:
-                flag += 1
-        if flag == len(tmplist):
-            tmplist.append(flist)
-            out.append(f)
-               
+        if flag:
+           out.append(filelist[i])
 
 #    print len(out)
     with open(sys.argv[2], 'w') as handle:
