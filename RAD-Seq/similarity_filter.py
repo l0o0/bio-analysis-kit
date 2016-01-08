@@ -4,9 +4,6 @@
 
 import sys
 
-if len(sys.argv) != 4:
-    print "USAGE: python script.py inputfile outfile similarity(float)"
-    sys.exit(0)
 
 
 def similarity(s, l1, l2, simi=0.99):
@@ -21,6 +18,9 @@ def similarity(s, l1, l2, simi=0.99):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 4:
+        print "USAGE: python script.py inputfile outfile similarity(float)"
+        sys.exit(0)
     with open(sys.argv[1]) as handle:
         filelist = handle.readlines()
 
