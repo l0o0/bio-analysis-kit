@@ -32,6 +32,10 @@ def PopSNP(infile, sampleNum):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print 'python script.py in.vcf sampleNum outputfile'
+        sys.exit(0)
+
     snp_dict = PopSNP(sys.argv[1],int(sys.argv[2]))
     out = ['Sample\tAll\tHome\tHome-rate\tHete\tHete-rate\tMiss\tMiss-rate\n']
     for k in snp_dict:
