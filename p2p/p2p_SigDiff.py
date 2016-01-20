@@ -13,9 +13,10 @@ def read_pp(infile):
     else:
         handle = open(infile)
     pplist = handle.readlines()
-    outlist = ['\t'.join(f.split()[:2])+'\n' for f in pplist]
+#    pplist = [re.sub('\.\d', '', x) for x in pplist]
+#    outlist = ['\t'.join(f.split()[:2])+'\n' for f in pplist]
     
-    return outlist
+    return pplist
 
 
 def read_dge(infile):
@@ -69,29 +70,33 @@ def read_updown(infile):
     with open(infile) as handle:
         for f in handle:
             flist = f.split('\t')
-            D[flist[0]] = flist[7]
+            D[flist[0]] = flist[5]
     return D
 
 
 if __name__ == "__main__":
-    pp = read_pp('9606__protein_links.tsv')
-    id2name, name2id = name_stringid('9606__proteins.tsv')
-    updown = read_updown(sys.argv[1])
-#    dge = read_dge(sys.argv[1])
-#    print updown.keys()[:10]
-#    print updown.values()[:5]
+    if len(sys.argv) != 4:
+        print "python script.py stringdb_links sig_deg"
+        sys.exit(0)
+
+    pplinks = read_pp(sys.argv[1])
+#    id2name, name2id = name_stringid('9606__proteins.tsv')
+    updown = read_updown(sys.argv[2])
     dge = updown.keys()
-    with open('tmp.txt','w') as handle:
-        header = 'fromName\ttoName\tF\tT' + 'protein1 protein2 neighborhood neighborhood_transferred fusion cooccurence homology coexpression coexpression_transferred experiments experiments_transferred database database_transferred textmining textmining_transferred combined_score\n'.replace(' ','\t')
-        handle.write(header)
-        tmplist = []
-        for genename in dge:
-            if genename in name2id:
-                stringid = name2id[genename]
-                for link in pp:
-                    if stringid+'\t' in link or stringid+'\n' in link:
-                        newlink = add_name(link, updown, id2name)
-                        tmplist.append(newlink)
-        tmplist = list(set(tmplist))
-        handle.writelines(tmplist)
-              
+    outsif = []
+    outdiff = []
+
+    for links in pplinks:
+        if links[0] in dge or links[1] in dge:
+            linksline = '\t'.join(links) + '\n'
+            outsif.append(linksline)
+    
+            outdiff += [gene + '\t'+ updown[gene]+'\n' for gene in links[:2] if gene in updown]
+
+    outsif = list(set(outsif))
+    prefix = sys.argv[3]
+    with open(prefix + '.sif','w') as handle:
+        handle.writelines(outsif)
+
+    with open(prefix + '.data','w') as handle:
+        handle.writelines(outdiff)
