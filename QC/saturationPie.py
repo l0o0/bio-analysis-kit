@@ -26,7 +26,8 @@ result = 'Clean Reads\t%s\nContaining N\t%s\nLow Quality\t%s\nContaining Adaptor
 with open(sys.argv[3],'w') as handle:
     handle.write(result)
 
-cmd = '/nfs2/pipe/RNA/soft/R-3.1.2/bin/Rscript /nfs/pipe/RNA/RNA-ref/version1/filter/plot_RawReadsClass.R ' + sys.argv[3]
+#cmd = '/nfs2/pipe/RNA/soft/R-3.1.2/bin/Rscript /nfs/pipe/RNA/RNA-ref/version1/filter/plot_RawReadsClass.R ' + sys.argv[3]
+cmd = 'Rscript /nfs3/onegene/user/group1/linxingzhong/scripts/bio/QC/plot_RawReadsClass.R ' + sys.argv[3]
 os.system(cmd)
 
 #print clean_reads,N_bases,low_quality,adapters
