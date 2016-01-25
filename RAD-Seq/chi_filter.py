@@ -50,16 +50,18 @@ if __name__ == '__main__':
             flist = f.strip().split()
             marker = flist[0]
             seg = flist[1]
-            seglist, segfeq = segregation(seg, sample_num)
-            # sort genotype letters 
-            prolist = [''.join(sorted(x)) for x in flist[2:]]
-            afeq = [prolist.count(i) for i in seglist]
+            # filter pure parent
+            if len(set(seg)) > 4: 
+                seglist, segfeq = segregation(seg, sample_num)
+                # sort genotype letters 
+                prolist = [''.join(sorted(x)) for x in flist[2:]]
+                afeq = [prolist.count(i) for i in seglist]
 
-            chi, df, sig = chi_test(afeq, segfeq, sys.argv[5])
-            if sig == 'No sig':
-                f = '\t'.join((marker,seg,'\t'.join(prolist),'\n'))
-                filtered.append(f)
-            out.append('%s\t%5g\t%s\t%s\t%s\t%s\n' % (marker, chi, df, str(afeq), str(segfeq), sig))
+                chi, df, sig = chi_test(afeq, segfeq, sys.argv[5])
+                if sig == 'No sig':
+                    f = '\t'.join((marker,seg,'\t'.join(prolist),'\n'))
+                    filtered.append(f)
+                out.append('%s\t%5g\t%s\t%s\t%s\t%s\n' % (marker, chi, df, str(afeq), str(segfeq), sig))
 
     with open(sys.argv[2], 'w') as handle:
         handle.writelines(out)
