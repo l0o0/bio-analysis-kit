@@ -13,7 +13,7 @@ def read_pp(infile):
     else:
         handle = open(infile)
     pplist = handle.readlines()
-#    pplist = [re.sub('\.\d', '', x) for x in pplist]
+    pplist = [re.sub('\.\d', '', x).split() for x in pplist]
 #    outlist = ['\t'.join(f.split()[:2])+'\n' for f in pplist]
     
     return pplist
@@ -80,8 +80,10 @@ if __name__ == "__main__":
         sys.exit(0)
 
     pplinks = read_pp(sys.argv[1])
+    print len(pplinks)
 #    id2name, name2id = name_stringid('9606__proteins.tsv')
     updown = read_updown(sys.argv[2])
+    print len(updown)
     dge = updown.keys()
     outsif = []
     outdiff = []
