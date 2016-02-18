@@ -89,14 +89,18 @@ def get_value(d, final_dict):
     return [d[x] for x in final_list]
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print "USAGE: python script.py <input file> <marker number>"
+        sys.exit(0)
+
     filein = sys.argv[1]
     d = file2dict(filein)
     new_dict = chr_dict(d)
-    final_dict, inter_dis = num_control(new_dict,6500)
-    print sum(len(final_dict[y]) for y in final_dict)
-    print len(final_dict)
+    final_dict, inter_dis = num_control(new_dict, int(sys.argv[2]))
+#    print sum(len(final_dict[y]) for y in final_dict)
+#    print len(final_dict)
     final_list = get_value(d, final_dict)
-    print len(final_list)
+#    print len(final_list)
     prefix = sys.argv[1].split('.')[0]
     outfile = "%s_D%s.txt" % (prefix, inter_dis)
     with open(outfile, 'w') as handle:
