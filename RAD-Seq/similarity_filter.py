@@ -14,6 +14,7 @@ def similarity(s, l1, l2, simi=0.99):
             n += 1
         if n >= thresh_num:
             return False
+            break
     return True
 
 
