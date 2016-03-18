@@ -13,4 +13,9 @@ function summary()
     printf "%s\t%s\t%s\t%s%%\t%s%%\n" $2 $raw $bases $GC $Q20
 }
 
+if [ $# -ne 2 ]; then
+    echo "USAGE: sh filter_stat_summary.sh Basic_Statistics_of_Sequencing_Quality.txt sampleName"
+    exit 0
+fi
+
 summary $1 $2 
