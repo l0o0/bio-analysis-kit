@@ -25,6 +25,7 @@ parser.add_argument('-o', help='output file name(fasta format by default',
 parser.add_argument('-r', help='''reverse_complement of the sequence if
         the strand is '-',default is false, valid parameter is T or F''',
         default='F', choices=['T','F'])
+parser.add_argument('-b', help='Remove first line.', default='F', choices=['T','F'])
 #parser.add_argument('-feature', help='GFF file feature needs to get', type=str)
 args=parser.parse_args()
 
@@ -37,7 +38,7 @@ def fa_to_dict(fa_file):
     return fa_dict
 
 #select gene id by col number
-def select_gene(inputfile,gene_col):            #file input and gene col nm
+def select_gene(inputfile,gene_col, header):            #file input and gene col nm
     gene_list = []
 
     for x in inputfile:
@@ -47,7 +48,10 @@ def select_gene(inputfile,gene_col):            #file input and gene col nm
         gene_list.append(x)
 
     print '%s genes input.' % (len(gene_list))
-    return gene_list
+    if header == 'F':
+        return gene_list
+    elif header == 'T':
+        return gene_list[1:]
 
 # creat a dict,gene id as key, position as value
 # input gff3 file
@@ -119,7 +123,7 @@ def promoter(chr_dict, pos_dict, reverse, output, gene_list, length):
 if __name__ == '__main__':
     chr_dict = fa_to_dict(args.f)
     pos_dict = pos(args.g)
-    gene_list = select_gene(args.i, args.c)
+    gene_list = select_gene(args.i, args.c, args.b)
     promoter(chr_dict, pos_dict, args.r, args.o, gene_list, args.l)
 
     t = time.clock() - start        #time comsumed
