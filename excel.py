@@ -25,7 +25,7 @@ def transfer(infile, style):
     worksheet = workbook.add_sheet(sheetname)
     with open(infile) as handle:
         for idx, rowline in enumerate(handle):
-            rowline = rowline.strip().split('\t')
+            rowline = rowline[:-1].split('\t')
             if len(rowline) > 256:
                 print "Maximun colmun num reached!\nPlease check your file or use xlsx instead."
                 sys.exit(0)
