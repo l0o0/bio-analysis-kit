@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 if [ $# -ne 2 ]; then
-    echo "USAGE: sh check_summary.sh checkfile"
+    echo "USAGE: sh check_summary.sh checkfile1 checkfile2"
     exit 0
 fi
 

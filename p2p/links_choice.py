@@ -39,10 +39,11 @@ start = time.time()
 
 all_links_diff = set(reduce(lambda x,y:x+y, D.values()))
 all_links_diff = ['\t'.join(x)+'\n' for x in all_links_diff]
+all_links_diff = ['fromNode\ttoNode\n'] + all_links_diff
 print time.time() - start
 
 topGenes = sorted(D.keys(), key=lambda x: len(D[x]), reverse=True)
-outlinks = ['fromNode\ttoNode\n']
+outlinks = [['fromNode','toNode']]
 outlinks += D[topGenes[0]][:100]
 outlinks += D[topGenes[1]][:50]
 outlinks += D[topGenes[2]][:50]
