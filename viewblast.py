@@ -77,10 +77,10 @@ def plot_subject(dwg, query_dict, subject_id, y):
                 stroke=cbPalette[idx%8], stroke_width=0.5))
         dwg.add(dwg.rect(insert=(line1start*cm, (y+1-(idx%2+1) *0.1)*cm), 
                 size=((line2start-line1start)*cm, 0.5*mm),
-                fill=cbPalette[idx%8], stroke=cbPalette[idx%8], stroke_width=0.5))
-        dwg.add(dwg.rect(insert=(line1end*cm, (y+5+(idx%2+1)*0.1)*cm),
+                fill=cbPalette[idx%8], stroke='white', stroke_width=0.5))
+        dwg.add(dwg.rect(insert=(min(line1end, line2end)*cm, (y+5+(idx%2+1)*0.1)*cm),
                 size=((line2start-line1start)*cm, 0.5*mm),
-                fill=cbPalette[idx%8], stroke=cbPalette[idx%8], stroke_width=0.5))
+                fill=cbPalette[idx%8], stroke='white', stroke_width=0.5))
         
     return dwg
 
