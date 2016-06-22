@@ -1,16 +1,24 @@
 # load expression data
 load('datExpr.RData')
 
+if(dim(datExpr)[2]^2 > 2^31){
+    print('Now, Data is too huge to handle for WGCNA!\n
+    You could trim you data or follow the block-wise-
+    network-construction script in WGCNA.')
+    quit(save='no')
+}
+
 # environment
 library(WGCNA)
 options(stringsAsFactors=FALSE)
 enableWGCNAThreads(6)
 
 # softpower
-softPower = 6
+softPower = 7 
 
 # unsigned type
 adjacency = adjacency(datExpr, power = softPower)
+save(file='adjMat.RData', adjacency)
 TOM = TOMsimilarity(adjacency)
 dissTOM = 1 - TOM
 save(file='dissTOM.RData', dissTOM)
@@ -48,6 +56,10 @@ pdf(file = 'BeforeAndAfterMerge.pdf', wi=12, he=9)
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), dendroLabels
 = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05)
 dev.off()
+png(file = 'BeforeAndAfterMerge.png', wi=2000, he=1600)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), dendroLabels
+= FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05)
+dev.off()
 
 moduleColors = mergedColors
 colorOrder = c('grey', standardColors(100))
@@ -56,28 +68,6 @@ MEs = mergedMEs
 save(file='dynamic_merged_networkdata.RData', MEs, moduleLabels, moduleColors,
 geneTree, dynamicMods)
 
-# output module genes and rpkm values, export network to cytoscape
-dir.create('moduleGenes', showWarnings = FALSE)
-colors = names(table(moduleColors))
-data = t(datExpr)
-genes = names(datExpr)
-
-for (c in colors) {
-    selected = moduleColors == c
-    tmpdata = data[selected,]
-    outfilename = paste('moduleGenes/', c,'.xls', sep='')
-    write.table(file=outfilename, tmpdata, quote=F, sep='\t')
-
-    modGenes = genes[selected]
-    modTom = TOM[selected,selected]
-    dimnames(modTOM) = list(modGenes, modGenes)
-    exportNetworkToCytoscape(modTOM, 
-      edgeFile = paste("moduleGenes/cyt-edge_", c, ".txt", sep=""),
-      nodeFile = paste("moduleGenes/cyt-nodes-", c, ".txt", sep=""),
-      weighted = TRUE,
-      threshold = 0.02,
-      nodeNames = modGeness,
-      altNodeNames = modGenes,
-      nodeAttr = moduleColors[selected])
-}
-
+intramoduleConectivity = intramodularConnectivity(adjacency, moduleColors)
+intramoduleConectivity = cbind(intramoduleConectivity, moduleColors)
+write.table(intramoduleConectivity, file='intramoduleConectivity_all.xls', sep='\t', quote=F, col.names=NA)
