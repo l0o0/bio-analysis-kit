@@ -62,7 +62,7 @@ done
 
 # for filtering
 G=$6
-if [ $G -eq 0 ]; then
+if [ $G = 0 ]; then
     G=''
 fi
 
@@ -70,7 +70,7 @@ mkdir $4/03.cut
 for j in ${index2sample[*]}
 do
     mkdir $4/02.filter/$j
-    echo -e "/nfs/pipe/RNA/RNA-ref/version1/02.filter/SOAPnuke1.3.0 filter -1 $4/01.ph64/${j}_R1.fastq.gz -2 $4/01.ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 20 -q 0.3 -n 0.02 -i -c 0 -o $4/02.filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/02.filter/$j.sh
+    echo -e "/nfs/pipe/RNA/RNA-ref/version1/filter/SOAPnuke1.3.0 filter -1 $4/01.ph64/${j}_R1.fastq.gz -2 $4/01.ph64/${j}_R2.fastq.gz -r AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA -f GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -l 20 -q 0.3 -n 0.02 -i -c 0 -o $4/02.filter/$j -C ${j}_R1.fq.gz -D ${j}_R2.fq.gz" > $4/02.filter/$j.sh
     echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/filter/PlotfilterResult_GC-PE_Forsoapnuke.pl $j/Base_distributions_by_read_position_1.txt $j/Base_distributions_by_read_position_2.txt -k $j -o $j" >> $4/02.filter/$j.sh
 	echo -e "perl /nfs/pipe/RNA/RNA-ref/version1/cutFq2.pl $4/02.filter/${j}/${j}_R1.fq.gz $4/02.filter/${j}/${j}_R2.fq.gz $5 ${j} $6" > $4/03.cut/$j.sh
     # fqpath for configure file in cut
