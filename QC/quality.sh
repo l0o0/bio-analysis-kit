@@ -37,12 +37,12 @@ done < $1
 
 # for quality converting
 for i in $(ls $3/*.gz)
-do 
-    old=i$(basename $i)
+do  
+    old=$(basename $i)
     tmpindex=`echo $old | awk -F '_|-' '{print $"'$2'"}'`
 #    echo $tmpindex,tmpindex
     if [ -n "$tmpindex"  ] && [ -n "${index2sample[$tmpindex]}" ]; then
-        suffix=${old##*_}
+        suffix=R${old##*_R[12]}
         new=${index2sample[$tmpindex]}_${suffix}
         old2new[$old]=$new
         ln -s $i $4/$new
