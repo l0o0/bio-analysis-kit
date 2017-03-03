@@ -42,13 +42,23 @@ do
     tmpindex=`echo $old | awk -F '_|-' '{print $"'$2'"}'`
 #    echo $tmpindex,tmpindex
     if [ -n "$tmpindex"  ] && [ -n "${index2sample[$tmpindex]}" ]; then
-        suffix=R${old##*_R[12]}
+        #suffix=R${old##*_R[12]}
+
+        if [[ "$old" =~ "_R1" ]];then
+            suffix=R1.fastq.gz
+            #echo $suffix
+        elif [[ "$old" =~ "_R2"  ]];then
+            suffix=R2.fastq.gz
+        fi
+
+        #echo $suffix,$old
         new=${index2sample[$tmpindex]}_${suffix}
         old2new[$old]=$new
         ln -s $i $4/$new
         echo -e "$old\t$new" >> old2new.txt
 
         ph64sh=${new%%.*}.sh
+
         if [[ $ph64sh =~ ^[0-9] ]];then
             ph64sh=X_${ph64sh}
         fi
