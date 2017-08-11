@@ -15,7 +15,7 @@ def read_pp(infile):
     pplist = handle.readlines()
     pplist = [re.sub('\.\d', '', x).split() for x in pplist]
 #    outlist = ['\t'.join(f.split()[:2])+'\n' for f in pplist]
-    
+
     return pplist
 
 
@@ -25,7 +25,7 @@ def read_dge(infile):
     return [x.split()[0] for x in flist[1:]]
 
 
-# gene name to string id 
+# gene name to string id
 def name_stringid(stringname):
     with open(stringname) as handle:
         handlist = handle.readlines()
@@ -76,7 +76,7 @@ def read_updown(infile):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print "python script.py stringdb_links sig_deg"
+        print "python %s stringdb_links sig_deg outprefix" % sys.argv[0]
         sys.exit(0)
 
     pplinks = read_pp(sys.argv[1])
@@ -89,11 +89,11 @@ if __name__ == "__main__":
     outdiff = []
 
     for links in pplinks:
-        if links[0] in dge or links[1] in dge:
-            linksline = '\t'.join(links) + '\n'
-            outsif.append(linksline)
-    
-            outdiff += [gene + '\t'+ updown[gene]+'\n' for gene in links[:2] if gene in updown]
+        if links[0] in dge and links[1] in dge:
+            linksline = '\t'.join(sorted(links[:2])) + '\t' + links[2] + '\n'
+            if linksline not in outsif:
+                outsif.append(linksline)
+                outdiff += [gene + '\t'+ updown[gene]+'\n' for gene in links[:2] if gene in updown]
 
     outsif = list(set(outsif))
     prefix = sys.argv[3]

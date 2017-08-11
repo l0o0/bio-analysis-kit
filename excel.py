@@ -5,7 +5,7 @@ import xlwt
 import xlrd
 
 
-def row_writer(idx,rowline,ws, style):
+def row_writer(idx,rowline,ws, style, infile):
     '''idx = row index
        rowline = value list
        ws = worksheet object'''
@@ -15,6 +15,7 @@ def row_writer(idx,rowline,ws, style):
             ws.write(idx,i,v, style)
         except ValueError:
             print "The max column number of xls format is 256!\nPlease check your file or use xlsx instead."
+            print "%s" % infile
             sys.exit(0)
     return ws
 
@@ -29,7 +30,7 @@ def transfer(infile, style):
             if len(rowline) > 256:
                 print "Maximun colmun num reached!\nPlease check your file or use xlsx instead."
                 sys.exit(0)
-            worksheet = row_writer(idx, rowline, worksheet, style)
+            worksheet = row_writer(idx, rowline, worksheet, style, infile)
 
     return workbook
 

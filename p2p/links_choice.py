@@ -3,7 +3,7 @@ import time
 
 
 if len(sys.argv) != 4:
-    print "USAGE: python script.py stringdb_links.txt SigDiff.txt out_prefix"
+    print "USAGE: python sys.argv[0] links.txt SigDiff.txt out_prefix"
     sys.exit(0)
 
 
@@ -15,18 +15,20 @@ with open(sys.argv[1]) as handle:
     tmplist = handle.readlines()
     links = [tuple(sorted(x.split()[:2])) for x in tmplist if int(x.split()[2])>score]
     links = list(set(links))
-
 print time.time() - start
 start = time.time()
 
 diffgenes = []
+log2 = ['GeneID\tlog2\n']
 with open(sys.argv[2]) as handle:
     for f in handle:
         if f.startswith('GeneID'):
             continue
-        gene = f.split()[0]
+        tmplist = f.split()
+        gene = tmplist[0]
+        log = tmplist[-3]
+        log2.append('%s\t%s\n' % (gene, log))
         diffgenes.append(gene)
-
 print time.time() - start
 start = time.time()
 D = {}
@@ -51,9 +53,12 @@ outlinks += D[topGenes[3]][:50]
 
 allout = sys.argv[3] + '_all.txt'
 topout = sys.argv[3] + '_top250.txt'
-
+log2file = sys.argv[3] + '_log2.txt'
 with open(topout, 'w') as handle:
     handle.writelines(['\t'.join(x) + '\n' for x in outlinks])
 
 with open(allout, 'w') as handle:
     handle.writelines(all_links_diff)
+
+with open(log2file, 'w') as handle:
+    handle.writelines(log2)

@@ -3,6 +3,7 @@
 import math
 import sys
 
+from scipy.stats import chisquare
 
 if len(sys.argv) != 6:
     print "USAGE: python script.py input.loc summary.txt output.txt ProSampleNum chi_pvalue"
@@ -32,6 +33,15 @@ def chi_test(alist, tlist, pvalue):
         return chi, 2, s
 
 
+def sci_chi(alist, tlist, pvalue):
+    pvalue = float(pvalue)
+    chi_result = chisquare(alist, f_exp=tlist)
+    if chi_result[1] < pvalue:
+        s='sig'
+    else:
+        s='No sig'
+    return chi_result[0], chi_result[1], s
+
 def segregation(seg, sampleNum):
     seg = seg.split('x')
     sega = seg[0][1:]
@@ -52,12 +62,12 @@ if __name__ == '__main__':
             seg = flist[1]
             # filter pure parent
             if len(set(seg)) > 4: 
-                seglist, segfeq = segregation(seg, sample_num)
+                seglist, segfeq = segregation(seg, sample_num-flist[2:].count('--'))
                 # sort genotype letters 
                 prolist = [''.join(sorted(x)) for x in flist[2:]]
                 afeq = [prolist.count(i) for i in seglist]
 
-                chi, df, sig = chi_test(afeq, segfeq, sys.argv[5])
+                chi, df, sig = sci_chi(afeq, segfeq, sys.argv[5])
                 if sig == 'No sig':
                     f = '\t'.join((marker,seg,'\t'.join(prolist),'\n'))
                     filtered.append(f)
